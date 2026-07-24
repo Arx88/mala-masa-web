@@ -122,9 +122,9 @@ export function Carta() {
             </Reveal>
             <Reveal delay={100}>
               <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-                Seis sabores.
+                Muchos sabores
                 <br />
-                <span className="text-primary">Cero relleno.</span>
+                <span className="text-primary">Mucho relleno.</span>
               </h2>
             </Reveal>
           </div>

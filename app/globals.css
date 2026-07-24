@@ -217,3 +217,51 @@
 .animate-spin-slow {
   animation: spin-slow 18s linear infinite;
 }
+
+/* Ken Burns lentísimo para el hero */
+@keyframes hero-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.animate-hero-drift {
+  animation: hero-drift 28s ease-in-out infinite alternate;
+}
+
+/* Pop del contador del carrito */
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+.animate-badge-pop {
+  animation: badge-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Punto que cae en el indicador de scroll */
+@keyframes scroll-dot {
+  0% { transform: translateY(-2px); opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { transform: translateY(22px); opacity: 0; }
+}
+
+.animate-scroll-dot {
+  animation: scroll-dot 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* Barra de progreso de lectura */
+.scroll-progress {
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-drift,
+  .animate-badge-pop,
+  .animate-scroll-dot,
+  .animate-float,
+  .animate-spin-slow {
+    animation: none;
+  }
+}

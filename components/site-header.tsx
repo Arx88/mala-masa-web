@@ -1,8 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCart } from '@/components/cart-context'
+import { ScrollProgress } from '@/components/scroll-progress'
 import { cn } from '@/lib/utils'
 
 const links = [
@@ -17,6 +18,19 @@ export function SiteHeader() {
   const { count, open } = useCart()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [popping, setPopping] = useState(false)
+  const prevCount = useRef(count)
+
+  // Pop del contador cuando se añade algo al pedido
+  useEffect(() => {
+    if (count > prevCount.current) {
+      setPopping(true)
+      const t = setTimeout(() => setPopping(false), 500)
+      prevCount.current = count
+      return () => clearTimeout(t)
+    }
+    prevCount.current = count
+  }, [count])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -34,6 +48,7 @@ export function SiteHeader() {
           : 'bg-transparent border-b border-transparent',
       )}
     >
+      <ScrollProgress />
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 md:px-8 h-16 md:h-20">
         <a href="#top" className="shrink-0" aria-label="Mala Masa — inicio">
           <Image
@@ -68,6 +83,7 @@ export function SiteHeader() {
             <span
               className={cn(
                 'flex size-5 items-center justify-center rounded-full text-[11px] font-black tabular-nums transition-colors duration-300',
+                popping && 'animate-badge-pop',
                 count > 0
                   ? 'bg-primary text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary'
                   : 'bg-foreground/15 text-foreground group-hover:bg-primary-foreground/20 group-hover:text-primary-foreground',

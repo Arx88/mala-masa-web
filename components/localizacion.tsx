@@ -63,9 +63,16 @@ export function Localizacion() {
           <Reveal delay={280}>
             <dl className="mt-8 flex flex-col divide-y divide-border border-y border-border">
               {horarios.map((h) => (
-                <div key={h.dias} className="flex items-center justify-between gap-4 py-3.5">
-                  <dt className="text-sm font-bold uppercase tracking-[0.1em]">{h.dias}</dt>
-                  <dd className="text-sm tabular-nums text-muted-foreground">{h.horas}</dd>
+                <div
+                  key={h.dias}
+                  className="group flex items-center justify-between gap-4 py-3.5 transition-all duration-300 hover:pl-2"
+                >
+                  <dt className="text-sm font-bold uppercase tracking-[0.1em] transition-colors duration-300 group-hover:text-accent">
+                    {h.dias}
+                  </dt>
+                  <dd className="text-sm tabular-nums text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+                    {h.horas}
+                  </dd>
                 </div>
               ))}
             </dl>

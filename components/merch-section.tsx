@@ -20,7 +20,7 @@ function MerchCard({ product, index }: { product: Product; index: number }) {
 
   return (
     <Reveal as="li" delay={index * 140} className="group h-full">
-      <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-background transition-all duration-500 hover:border-foreground/30">
+      <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-background transition-all duration-500 hover:-translate-y-1.5 hover:border-foreground/30 hover:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
         {product.tag && (
           <span className="absolute left-4 top-4 z-10 rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-primary-foreground">
             {product.tag}
@@ -46,7 +46,7 @@ function MerchCard({ product, index }: { product: Product; index: number }) {
               className={cn(
                 'rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
                 justAdded
-                  ? 'bg-accent text-accent-foreground'
+                  ? 'animate-badge-pop bg-accent text-accent-foreground'
                   : 'bg-foreground text-background hover:bg-primary hover:text-primary-foreground',
               )}
             >

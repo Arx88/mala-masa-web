@@ -31,19 +31,19 @@ export function BrandTicker({
   )
 
   return (
-    <div
-      className={cn(
-        'marquee-paused overflow-hidden py-3.5 md:py-4',
-        variant === 'red'
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-foreground text-background',
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <div className="flex w-max gap-6 md:gap-10 animate-marquee">
-        <div className="flex items-center gap-6 md:gap-10">{row}</div>
-        <div className="flex items-center gap-6 md:gap-10">{row}</div>
+    <div className={cn('overflow-hidden py-2', className)} aria-hidden="true">
+      <div
+        className={cn(
+          'marquee-paused -mx-[2%] w-[104%] overflow-hidden py-3.5 md:py-4',
+          variant === 'red'
+            ? 'bg-primary text-primary-foreground -rotate-[0.8deg]'
+            : 'bg-foreground text-background rotate-[0.8deg]',
+        )}
+      >
+        <div className="flex w-max gap-6 md:gap-10 animate-marquee">
+          <div className="flex items-center gap-6 md:gap-10">{row}</div>
+          <div className="flex items-center gap-6 md:gap-10">{row}</div>
+        </div>
       </div>
     </div>
   )

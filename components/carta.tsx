@@ -20,7 +20,7 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
 
   return (
     <Reveal as="li" delay={(index % 3) * 120} className="group">
-      <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-all duration-500 hover:border-foreground/30 hover:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
+      <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-all duration-500 hover:-translate-y-1.5 hover:border-foreground/30 hover:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
         {product.tag && (
           <span className="absolute left-4 top-4 z-10 rounded-full bg-accent px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-accent-foreground">
             {product.tag}
@@ -75,7 +75,7 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
               className={cn(
                 'relative overflow-hidden rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
                 justAdded
-                  ? 'bg-accent text-accent-foreground'
+                  ? 'animate-badge-pop bg-accent text-accent-foreground'
                   : 'bg-foreground text-background hover:bg-primary hover:text-primary-foreground',
               )}
             >
@@ -169,7 +169,7 @@ export function Carta() {
                   <button
                     type="button"
                     onClick={() => addPack(6, 'media')}
-                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10"
+                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
                   >
                     <span>
                       <span className="block text-sm font-black uppercase tracking-wide">
@@ -184,7 +184,7 @@ export function Carta() {
                   <button
                     type="button"
                     onClick={() => addPack(12, 'docena')}
-                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10"
+                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
                   >
                     <span>
                       <span className="block text-sm font-black uppercase tracking-wide">

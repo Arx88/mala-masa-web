@@ -44,7 +44,7 @@ export function Manifiesto() {
           <ul className="mt-10 flex flex-col gap-6">
             {lineas.map((linea, i) => (
               <Reveal key={linea.accent} as="li" delay={250 + i * 120}>
-                <div className="group flex items-baseline gap-4 border-l-2 border-foreground/15 pl-5 transition-colors duration-500 hover:border-primary">
+                <div className="group flex items-baseline gap-4 border-l-2 border-foreground/15 pl-5 transition-all duration-500 hover:border-primary hover:pl-7">
                   <p className="text-pretty text-lg font-semibold leading-snug md:text-xl">
                     {linea.text}{' '}
                     <span className="font-black text-primary">{linea.accent}</span>

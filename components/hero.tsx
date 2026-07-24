@@ -19,16 +19,18 @@ export function Hero() {
     >
       {/* Foto de producto como fondo, anclada a la derecha */}
       <div className="absolute inset-0">
-        <Image
-          src="/images/empanadas-tray.png"
-          alt="Dos empanadas Mala Masa recién horneadas sobre papel de marca"
-          fill
-          priority
-          sizes="100vw"
-          className={`object-cover object-center transition-all duration-[1600ms] ease-out md:object-[70%_center] ${
-            loaded ? 'scale-100 opacity-100' : 'scale-110 opacity-0'
-          }`}
-        />
+        <div className={`absolute inset-0 ${loaded ? 'animate-hero-drift' : ''}`}>
+          <Image
+            src="/images/empanadas-tray.png"
+            alt="Dos empanadas Mala Masa recién horneadas sobre papel de marca"
+            fill
+            priority
+            sizes="100vw"
+            className={`object-cover object-center transition-all duration-[1600ms] ease-out md:object-[70%_center] ${
+              loaded ? 'scale-100 opacity-100' : 'scale-110 opacity-0'
+            }`}
+          />
+        </div>
         {/* Veladuras para legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
@@ -115,7 +117,9 @@ export function Hero() {
         aria-hidden="true"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Baja</span>
-        <span className="h-8 w-px animate-pulse bg-foreground/60" />
+        <span className="relative h-8 w-px overflow-hidden bg-foreground/25">
+          <span className="animate-scroll-dot absolute left-0 top-0 h-2.5 w-px bg-foreground" />
+        </span>
       </div>
     </section>
   )

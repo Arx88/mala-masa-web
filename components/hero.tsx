@@ -15,7 +15,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-svh flex-col justify-end overflow-hidden bg-background"
+      className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-background"
     >
       {/* Foto de producto como fondo, anclada a la derecha */}
       <div className="absolute inset-0">
@@ -45,7 +45,7 @@ export function Hero() {
         <RotatingSeal />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-24 pt-40 md:px-8 md:pb-28">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-20 pt-24 md:px-8 md:pb-24 md:pt-28">
         <div className="max-w-3xl">
           <p
             className={`mb-5 flex items-center gap-3 text-[13px] font-bold uppercase tracking-[0.28em] text-accent transition-all delay-300 duration-1000 ${

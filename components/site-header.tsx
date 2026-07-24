@@ -49,14 +49,14 @@ export function SiteHeader() {
       )}
     >
       <ScrollProgress />
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 md:px-8 h-16 md:h-20">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 md:px-8 h-20 md:h-24">
         <a href="#top" className="shrink-0" aria-label="Mala Masa — inicio">
           <Image
             src="/images/logo-script-white.png"
             alt="Mala Masa"
-            width={140}
-            height={78}
-            className="h-9 md:h-11 w-auto"
+            width={200}
+            height={91}
+            className="h-12 md:h-16 w-auto"
             priority
           />
         </a>

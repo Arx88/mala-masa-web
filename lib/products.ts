@@ -13,9 +13,9 @@ export const empanadas: Product[] = [
   {
     id: 'carne',
     name: 'La Clásica',
-    tagline: 'Carne cortada a cuchillo',
+    tagline: 'Roast Beef braseado al vino tinto',
     description:
-      'Ternera cortada a cuchillo, aceituna, huevo y comino. La que te enseñó tu abuela, pero con más actitud.',
+      'Cebolla, Pimiento, Papa, Roast Beef Braseado al vino tinto durante 4hs.',
     price: 3.9,
     image: '/images/emp-carne.png',
     spice: 1,
@@ -24,9 +24,9 @@ export const empanadas: Product[] = [
   {
     id: 'picante',
     name: 'La Brava',
-    tagline: 'Carne picante y ají fermentado',
+    tagline: 'Blend de carne picante',
     description:
-      'Ternera braseada, ají amarillo fermentado y un golpe de chile de árbol. No pide perdón.',
+      'Blend de carne molida premium, cebolla, pimientos, huevo, especias y salsa casera de ají picante.',
     price: 4.2,
     image: '/images/emp-picante.png',
     spice: 3,
@@ -35,9 +35,9 @@ export const empanadas: Product[] = [
   {
     id: 'pollo',
     name: 'La Criolla',
-    tagline: 'Pollo braseado al chimichurri',
+    tagline: 'Pollo de corral',
     description:
-      'Pollo de corral desmechado, pimiento asado y cebolla caramelizada. Jugosa hasta el último bocado.',
+      'Pollo de Corral a baja temperatura, cebolla, pimiento, huevo, condimentos varios, hidratado con caldo de gallina casero.',
     price: 3.9,
     image: '/images/emp-pollo.png',
     spice: 1,
@@ -45,29 +45,29 @@ export const empanadas: Product[] = [
   {
     id: 'jyq',
     name: 'La Fundida',
-    tagline: 'Jamón y muzza que estira',
+    tagline: 'Jamón y quesos',
     description:
-      'Muzzarella que se estira medio metro y jamón cocido braseado. Sin trucos, solo queso del bueno.',
+      'Jamón cocido natural premium, con muzarella, huevo y mezcla de quesos.',
     price: 3.7,
     image: '/images/emp-jyq.png',
     spice: 0,
   },
   {
     id: 'humita',
-    name: 'La Dulce',
-    tagline: 'Humita cremosa de choclo',
+    name: 'Humita',
+    tagline: 'Humita cremosa de maíz',
     description:
-      'Crema de maíz dulce, cebolla pochada y un toque de albahaca. La favorita de quien dice que no le gustan las empanadas.',
+      'MAÍZ RALLADO, CEBOLLA, PIMIENTO, SALSA BLANCA, QUESOS VARIOS.',
     price: 3.7,
     image: '/images/emp-humita.png',
     spice: 0,
   },
   {
     id: 'espinaca',
-    name: 'La Verde',
-    tagline: 'Espinaca y ricotta ahumada',
+    name: 'Fugazzeta',
+    tagline: 'Cebolla y mezcla de quesos',
     description:
-      'Espinaca fresca, ricotta ahumada en casa y nuez moscada. Verde por fuera del asunto, seria por dentro.',
+      'Queso muzarella, cheddar blanco curado, provolone, cebolla caramelizada.',
     price: 3.7,
     image: '/images/emp-espinaca.png',
     spice: 0,

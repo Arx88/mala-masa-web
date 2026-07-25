@@ -30,14 +30,13 @@ export function Manifiesto() {
           </Reveal>
           <Reveal delay={100}>
             <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-              Nos dijeron que la masa era{' '}
-              <span className="text-accent">lo de menos.</span>
+              Cada empanada se trabaja a la perfección.
             </h2>
           </Reveal>
           <Reveal delay={200}>
             <p className="mt-6 max-w-md text-pretty leading-relaxed text-foreground/70">
-              Nos lo tomamos como algo personal. Mala Masa nace de llevar la
-              contraria: creemos...
+              Cada receta se estudió, investigó y construyó con mucha
+              dedicación. creemos...
             </p>
           </Reveal>
 
@@ -69,7 +68,7 @@ export function Manifiesto() {
             {/* Etiqueta flotante */}
             <div className="animate-float absolute -bottom-5 left-5 rounded-md bg-foreground px-5 py-3 text-background shadow-xl md:left-8">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-background/60">
-                Est. 2025
+                Est. 2026
               </p>
               <p className="text-sm font-black uppercase tracking-wide">
                 Empanadas con actitud

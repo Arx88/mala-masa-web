@@ -15,7 +15,7 @@ const HERO_IMAGES = [
   },
 ]
 
-const CAROUSEL_INTERVAL = 5000 // 5 segundos por imagen
+const CAROUSEL_INTERVAL = 10000 // 10 segundos por imagen
 
 export function Hero() {
   const [loaded, setLoaded] = useState(false)

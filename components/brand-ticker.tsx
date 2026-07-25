@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 const words = [
   'Empanadas argentinas',
-  'Masa madre',
+  'Obsesión por el detalle',
   'Repulgue de verdad',
   'Cero atajos',
   'Hechas a mano',

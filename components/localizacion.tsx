@@ -49,14 +49,14 @@ export function Localizacion() {
             <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
               Búscanos.
               <br />
-              <span className="text-accent">Huélenos antes.</span>
+              <span className="text-accent">Seguí el aroma.</span>
             </h2>
           </Reveal>
 
           <Reveal delay={200}>
             <address className="mt-8 not-italic">
               <p className="text-xl font-black uppercase tracking-tight">Calle del Horno, 13</p>
-              <p className="text-muted-foreground">Barrio de las Letras · Madrid</p>
+              <p className="text-muted-foreground">Barrio Ruzzafa · Valencia</p>
             </address>
           </Reveal>
 

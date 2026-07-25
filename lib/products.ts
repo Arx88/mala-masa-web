@@ -76,12 +76,12 @@ export const empanadas: Product[] = [
 
 export const merch: Product[] = [
   {
-    id: 'tee-logo',
-    name: 'Tee Script',
-    tagline: 'Camiseta oversize crema',
-    description: 'Algodón orgánico 240 gsm con el lettering bordado al pecho.',
-    price: 32,
-    image: '/images/tee-front.png',
+    id: 'salsa-cheddar',
+    name: 'Salsa Cheddar',
+    tagline: 'Salsa cheddar cremosa',
+    description: 'Nuestra salsa cheddar cremosa de la casa. Perfecta para dippear tus empanadas favoritas.',
+    price: 3,
+    image: '/images/salsa-cheddar.png',
     spice: 0,
   },
   {
@@ -99,7 +99,7 @@ export const merch: Product[] = [
     name: 'Salsa Ácida',
     tagline: 'Chile fermentado, ajo y lima',
     description: 'Nuestra sour sauce de la casa embotellada. Brillante, ácida y adictiva. 207 ml.',
-    price: 9.5,
+    price: 3,
     image: '/images/salsa-acida.png',
     spice: 2,
   },

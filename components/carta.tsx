@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { useCart } from '@/components/cart-context'
-import { Reveal } from '@/components/reveal'
+import { MaskedHeading, Reveal } from '@/components/reveal'
 import { SpiceLevel, SprayStar } from '@/components/brand-marks'
 import { empanadas, formatPrice, type Product } from '@/lib/products'
 import { cn } from '@/lib/utils'
@@ -21,6 +21,11 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
   return (
     <Reveal as="li" delay={(index % 3) * 120} className="group">
       <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-all duration-500 hover:-translate-y-1.5 hover:border-foreground/30 hover:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
+        {/* Filo cálido que se enciende en el borde superior al pasar el ratón */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-70"
+        />
         {product.tag && (
           <span className="absolute left-4 top-4 z-10 rounded-full bg-accent px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-accent-foreground">
             {product.tag}
@@ -73,13 +78,29 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
               type="button"
               onClick={handleAdd}
               className={cn(
-                'relative overflow-hidden rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
+                'btn-shine relative rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
                 justAdded
                   ? 'animate-badge-pop bg-accent text-accent-foreground'
                   : 'bg-foreground text-background hover:bg-primary hover:text-primary-foreground',
               )}
             >
-              {justAdded ? 'Añadida' : 'Añadir'}
+              <span className="inline-flex items-center gap-1.5">
+                {justAdded && (
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="size-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                )}
+                {justAdded ? 'Añadida' : 'Añadir'}
+              </span>
             </button>
           </div>
         </div>
@@ -120,13 +141,13 @@ export function Carta() {
                 La Carta
               </p>
             </Reveal>
-            <Reveal delay={100}>
-              <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-                Muchos sabores
-                <br />
-                <span className="text-primary">Mucho relleno.</span>
-              </h2>
-            </Reveal>
+            <MaskedHeading
+              className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+              lines={['Muchos sabores', 'Mucho relleno.']}
+              lineClassName={(i) => (i === 1 ? 'text-primary' : undefined) as string}
+              baseDelay={80}
+              step={130}
+            />
           </div>
           <Reveal delay={200}>
             <p className="max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground md:text-right">
@@ -169,7 +190,7 @@ export function Carta() {
                   <button
                     type="button"
                     onClick={() => addPack(6, 'media')}
-                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
+                    className="btn-shine group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
                   >
                     <span>
                       <span className="block text-sm font-black uppercase tracking-wide">
@@ -177,14 +198,22 @@ export function Carta() {
                       </span>
                       <span className="text-xs text-muted-foreground">6 empanadas surtidas</span>
                     </span>
-                    <span className="text-lg font-black tabular-nums text-accent">
-                      {formatPrice(21.9)}
+                    <span className="flex items-center gap-2.5">
+                      <span className="text-lg font-black tabular-nums text-accent">
+                        {formatPrice(21.9)}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="-translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                      >
+                        →
+                      </span>
                     </span>
                   </button>
                   <button
                     type="button"
                     onClick={() => addPack(12, 'docena')}
-                    className="group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
+                    className="btn-shine group flex items-center justify-between rounded-md border border-border px-5 py-4 text-left transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:pl-6"
                   >
                     <span>
                       <span className="block text-sm font-black uppercase tracking-wide">
@@ -192,8 +221,16 @@ export function Carta() {
                       </span>
                       <span className="text-xs text-muted-foreground">12 empanadas surtidas</span>
                     </span>
-                    <span className="text-lg font-black tabular-nums text-accent">
-                      {formatPrice(39.9)}
+                    <span className="flex items-center gap-2.5">
+                      <span className="text-lg font-black tabular-nums text-accent">
+                        {formatPrice(39.9)}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="-translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                      >
+                        →
+                      </span>
                     </span>
                   </button>
                 </div>

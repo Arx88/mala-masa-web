@@ -19,6 +19,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [popping, setPopping] = useState(false)
+  const [active, setActive] = useState<string | null>(null)
   const prevCount = useRef(count)
 
   // Pop del contador cuando se añade algo al pedido
@@ -37,6 +38,26 @@ export function SiteHeader() {
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Resalta el enlace de la sección que se está viendo
+  useEffect(() => {
+    const sections = links
+      .map((l) => document.querySelector<HTMLElement>(l.href))
+      .filter((el): el is HTMLElement => Boolean(el))
+    if (!sections.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible) setActive(`#${visible.target.id}`)
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: [0, 0.2, 0.6] },
+    )
+    for (const s of sections) observer.observe(s)
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -66,9 +87,22 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="link-brush text-[13px] font-semibold uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground transition-colors"
+              aria-current={active === link.href ? 'true' : undefined}
+              className={cn(
+                'link-brush relative text-[13px] font-semibold uppercase tracking-[0.14em] transition-colors',
+                active === link.href
+                  ? 'text-foreground'
+                  : 'text-foreground/70 hover:text-foreground',
+              )}
             >
               {link.label}
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'absolute -left-3 top-1/2 size-1 -translate-y-1/2 rounded-full bg-primary transition-all duration-500',
+                  active === link.href ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
+                )}
+              />
             </a>
           ))}
         </nav>

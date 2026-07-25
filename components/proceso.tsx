@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Reveal } from '@/components/reveal'
+import { MaskedHeading, Reveal } from '@/components/reveal'
 import { SprayStar } from '@/components/brand-marks'
 
 const pasos = [
@@ -43,11 +43,17 @@ export function Proceso() {
               El Proceso
             </p>
           </Reveal>
-          <Reveal delay={100}>
-            <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-              Lo lento se nota <span className="text-accent">en el primer bocado.</span>
-            </h2>
-          </Reveal>
+          <MaskedHeading
+            className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+            lines={[
+              'Lo lento se nota',
+              <span key="a" className="text-accent">
+                en el primer bocado.
+              </span>,
+            ]}
+            baseDelay={60}
+            step={130}
+          />
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -67,9 +73,18 @@ export function Proceso() {
                   </div>
                 ) : (
                   <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-secondary">
+                    {/* Calor de fermentación */}
                     <span
                       aria-hidden="true"
-                      className="text-stroke select-none text-[7rem] font-black leading-none transition-transform duration-700 group-hover:scale-110"
+                      className="animate-ember absolute size-56 rounded-full blur-3xl"
+                      style={{
+                        background:
+                          'radial-gradient(circle, oklch(0.75 0.15 75 / 14%), transparent 65%)',
+                      }}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="text-stroke relative select-none text-[7rem] font-black leading-none transition-transform duration-700 group-hover:scale-110"
                     >
                       48h
                     </span>
@@ -77,7 +92,8 @@ export function Proceso() {
                   </div>
                 )}
                 <div className="flex flex-1 flex-col gap-2 p-6">
-                  <p className="text-[12px] font-black uppercase tracking-[0.24em] text-accent tabular-nums">
+                  <p className="flex items-center gap-2.5 text-[12px] font-black uppercase tracking-[0.24em] text-accent tabular-nums">
+                    <span className="h-px w-6 bg-accent/50 transition-all duration-500 group-hover:w-10 group-hover:bg-accent" />
                     Paso {paso.num}
                   </p>
                   <h3 className="text-xl font-black uppercase tracking-tight">{paso.title}</h3>

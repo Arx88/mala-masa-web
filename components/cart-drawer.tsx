@@ -86,8 +86,12 @@ export function CartDrawer() {
         ) : (
           <>
             <ul className="flex-1 divide-y divide-border overflow-y-auto px-6">
-              {items.map(({ product, qty }) => (
-                <li key={product.id} className="flex gap-4 py-5">
+              {items.map(({ product, qty }, i) => (
+                <li
+                  key={product.id}
+                  className="flex gap-4 py-5 animate-in fade-in slide-in-from-right-4 duration-500"
+                  style={{ animationDelay: `${Math.min(i, 6) * 55}ms` }}
+                >
                   <div className="relative size-20 shrink-0 overflow-hidden rounded-md border border-border">
                     <Image
                       src={product.image}
@@ -156,7 +160,7 @@ export function CartDrawer() {
               </div>
               <button
                 type="button"
-                className="mt-4 w-full rounded-full bg-primary py-4 text-sm font-black uppercase tracking-[0.16em] text-primary-foreground transition-all duration-300 hover:brightness-110 active:scale-[0.99]"
+                className="btn-shine mt-4 w-full rounded-full bg-primary py-4 text-sm font-black uppercase tracking-[0.16em] text-primary-foreground transition-all duration-300 hover:brightness-110 active:scale-[0.99]"
               >
                 Tramitar pedido
               </button>

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Reveal } from '@/components/reveal'
+import { MaskedHeading, Reveal } from '@/components/reveal'
 import { SprayStar } from '@/components/brand-marks'
 
 const lineas = [
@@ -28,11 +28,18 @@ export function Manifiesto() {
               Manifiesto
             </p>
           </Reveal>
-          <Reveal delay={100}>
-            <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-              Cada empanada se trabaja a la <span className="text-primary">perfección.</span>
-            </h2>
-          </Reveal>
+          <MaskedHeading
+            className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+            lines={[
+              'Cada empanada',
+              'se trabaja a la',
+              <span key="p" className="text-primary">
+                perfección.
+              </span>,
+            ]}
+            baseDelay={60}
+            step={125}
+          />
           <Reveal delay={200}>
             <p className="mt-6 max-w-md text-pretty leading-relaxed text-foreground/70">
               Cada receta se estudió, investigó y construyó con mucha
@@ -44,6 +51,12 @@ export function Manifiesto() {
             {lineas.map((linea, i) => (
               <Reveal key={linea.accent} as="li" delay={250 + i * 120}>
                 <div className="group flex items-baseline gap-4 border-l-2 border-foreground/15 pl-5 transition-all duration-500 hover:border-primary hover:pl-7">
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 pt-1 text-[11px] font-black tabular-nums tracking-[0.2em] text-foreground/25 transition-colors duration-500 group-hover:text-accent"
+                  >
+                    0{i + 1}
+                  </span>
                   <p className="text-pretty text-lg font-semibold leading-snug md:text-xl">
                     {linea.text}{' '}
                     <span className="font-black text-primary">{linea.accent}</span>

@@ -1,12 +1,13 @@
 import Image from 'next/image'
-import { Reveal } from '@/components/reveal'
+import { HorariosList } from '@/components/horarios-list'
+import { MaskedHeading, Reveal } from '@/components/reveal'
 import { SprayStar } from '@/components/brand-marks'
 
 const horarios = [
-  { dias: 'Martes — Jueves', horas: '12:00 – 22:30' },
-  { dias: 'Viernes — Sábado', horas: '12:00 – 00:00' },
-  { dias: 'Domingo', horas: '12:00 – 17:00' },
-  { dias: 'Lunes', horas: 'Criando masa (cerrado)' },
+  { dias: 'Martes — Jueves', horas: '12:00 – 22:30', days: [2, 3, 4] },
+  { dias: 'Viernes — Sábado', horas: '12:00 – 00:00', days: [5, 6] },
+  { dias: 'Domingo', horas: '12:00 – 17:00', days: [0] },
+  { dias: 'Lunes', horas: 'Criando masa (cerrado)', days: [1] },
 ]
 
 export function Localizacion() {
@@ -45,13 +46,17 @@ export function Localizacion() {
               Dónde
             </p>
           </Reveal>
-          <Reveal delay={100}>
-            <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-              Búscanos.
-              <br />
-              <span className="text-accent">Seguí el aroma.</span>
-            </h2>
-          </Reveal>
+          <MaskedHeading
+            className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+            lines={[
+              'Búscanos.',
+              <span key="a" className="text-accent">
+                Seguí el aroma.
+              </span>,
+            ]}
+            baseDelay={60}
+            step={130}
+          />
 
           <Reveal delay={200}>
             <address className="mt-8 not-italic">
@@ -60,22 +65,8 @@ export function Localizacion() {
             </address>
           </Reveal>
 
-          <Reveal delay={280}>
-            <dl className="mt-8 flex flex-col divide-y divide-border border-y border-border">
-              {horarios.map((h) => (
-                <div
-                  key={h.dias}
-                  className="group flex items-center justify-between gap-4 py-3.5 transition-all duration-300 hover:pl-2"
-                >
-                  <dt className="text-sm font-bold uppercase tracking-[0.1em] transition-colors duration-300 group-hover:text-accent">
-                    {h.dias}
-                  </dt>
-                  <dd className="text-sm tabular-nums text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
-                    {h.horas}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+          <Reveal delay={280} className="mt-8">
+            <HorariosList horarios={horarios} />
           </Reveal>
 
           <Reveal delay={360}>
@@ -84,7 +75,7 @@ export function Localizacion() {
                 href="https://maps.google.com/?q=Calle+del+Horno+13+Madrid"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-3.5 text-sm font-black uppercase tracking-[0.14em] text-background transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] active:scale-[0.98]"
+                className="btn-shine group inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-3.5 text-sm font-black uppercase tracking-[0.14em] text-background transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] active:scale-[0.98]"
               >
                 Cómo llegar
                 <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">

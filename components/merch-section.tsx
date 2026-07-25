@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { useCart } from '@/components/cart-context'
-import { Reveal } from '@/components/reveal'
+import { MaskedHeading, Reveal } from '@/components/reveal'
 import { SprayStar } from '@/components/brand-marks'
 import { formatPrice, merch, type Product } from '@/lib/products'
 import { cn } from '@/lib/utils'
@@ -44,7 +44,7 @@ function MerchCard({ product, index }: { product: Product; index: number }) {
               type="button"
               onClick={handleAdd}
               className={cn(
-                'rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
+                'btn-shine rounded-full px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] transition-all duration-300 active:scale-95',
                 justAdded
                   ? 'animate-badge-pop bg-accent text-accent-foreground'
                   : 'bg-foreground text-background hover:bg-primary hover:text-primary-foreground',
@@ -78,11 +78,17 @@ export function MerchSection() {
                 Merch
               </p>
             </Reveal>
-            <Reveal delay={100}>
-              <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-                Ponte la masa <span className="text-primary">encima.</span>
-              </h2>
-            </Reveal>
+            <MaskedHeading
+              className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+              lines={[
+                'Ponte la masa',
+                <span key="a" className="text-primary">
+                  encima.
+                </span>,
+              ]}
+              baseDelay={70}
+              step={130}
+            />
           </div>
           <Reveal delay={200}>
             <p className="max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground md:text-right">

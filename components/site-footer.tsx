@@ -21,7 +21,7 @@ export function SiteFooter() {
             </h2>
             <a
               href="#carta"
-              className="group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
+              className="btn-shine group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
             >
               Pedir ahora
               <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">

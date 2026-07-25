@@ -30,7 +30,7 @@ export function Manifiesto() {
           </Reveal>
           <Reveal delay={100}>
             <h2 className="text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-              Cada empanada se trabaja a la perfección.
+              Cada empanada se trabaja a la <span className="text-primary">perfección.</span>
             </h2>
           </Reveal>
           <Reveal delay={200}>

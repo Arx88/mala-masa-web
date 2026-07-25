@@ -78,8 +78,8 @@ export function Hero() {
               loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
-            Masa madre de 48 horas, repulgue hecho a mano y rellenos sin
-            atajos. La empanada de siempre, criada en la calle.
+            Las mejores empanadas de Argentina ahora en España. No conociste
+            la empanada argentina si no nos probaste.
           </p>
 
           <div

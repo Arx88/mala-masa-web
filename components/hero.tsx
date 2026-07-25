@@ -4,36 +4,88 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { RotatingSeal, SprayStar } from '@/components/brand-marks'
 
+const HERO_IMAGES = [
+  {
+    src: '/images/empanadas-tray.png',
+    alt: 'Dos empanadas Mala Masa recién horneadas sobre papel de marca',
+  },
+  {
+    src: '/images/empanadas-tray-2.png',
+    alt: 'Empanadas Mala Masa recién horneadas listas para servir',
+  },
+]
+
+const CAROUSEL_INTERVAL = 5000 // 5 segundos por imagen
+
 export function Hero() {
   const [loaded, setLoaded] = useState(false)
+  const [currentImage, setCurrentImage] = useState(0)
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setLoaded(true))
     return () => cancelAnimationFrame(t)
   }, [])
 
+  // Auto-advance del carrusel
+  useEffect(() => {
+    if (!loaded) return
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % HERO_IMAGES.length)
+    }, CAROUSEL_INTERVAL)
+    return () => clearInterval(interval)
+  }, [loaded])
+
   return (
     <section
       id="top"
       className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-background"
     >
-      {/* Foto de producto como fondo, anclada a la derecha */}
+      {/* Carrusel de fotos de producto como fondo */}
       <div className="absolute inset-0">
-        <div className={`absolute inset-0 ${loaded ? 'animate-hero-drift' : ''}`}>
-          <Image
-            src="/images/empanadas-tray.png"
-            alt="Dos empanadas Mala Masa recién horneadas sobre papel de marca"
-            fill
-            priority
-            sizes="100vw"
-            className={`object-cover object-center transition-all duration-[1600ms] ease-out md:object-[70%_center] ${
-              loaded ? 'scale-100 opacity-100' : 'scale-110 opacity-0'
+        {HERO_IMAGES.map((img, i) => (
+          <div
+            key={img.src}
+            className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
+              loaded && i === currentImage ? 'opacity-100' : 'opacity-0'
             }`}
-          />
-        </div>
+          >
+            <div className={`absolute inset-0 ${loaded && i === currentImage ? 'animate-hero-drift' : ''}`}>
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                className={`object-cover object-center transition-all duration-[2000ms] ease-out md:object-[70%_center] ${
+                  loaded && i === currentImage ? 'scale-100' : 'scale-110'
+                }`}
+              />
+            </div>
+          </div>
+        ))}
         {/* Veladuras para legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
+      </div>
+
+      {/* Indicadores del carrusel */}
+      <div
+        className={`absolute bottom-24 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 transition-opacity delay-[1200ms] duration-1000 md:flex ${
+          loaded ? 'opacity-60' : 'opacity-0'
+        }`}
+        aria-hidden="true"
+      >
+        {HERO_IMAGES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setCurrentImage(i)}
+            className={`h-1 rounded-full transition-all duration-500 ${
+              i === currentImage ? 'w-8 bg-primary' : 'w-4 bg-foreground/30 hover:bg-foreground/50'
+            }`}
+            aria-label={`Imagen ${i + 1}`}
+          />
+        ))}
       </div>
 
       {/* Sello giratorio */}

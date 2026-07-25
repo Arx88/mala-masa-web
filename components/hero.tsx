@@ -62,14 +62,14 @@ export function Hero() {
                 loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              Buena gente,
+              Mala de carácter
             </span>
             <span
               className={`block text-5xl text-primary md:text-7xl lg:text-8xl transition-all delay-[600ms] duration-1000 ${
                 loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              Mala Masa.
+              Buena de sabor.
             </span>
           </h1>
 

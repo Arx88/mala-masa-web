@@ -78,8 +78,8 @@ export function Hero() {
               loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
-            Las mejores empanadas de Argentina ahora en España. No conociste
-            la empanada argentina si no nos probaste.
+            Las mejores empanadas de Argentina, ahora en España. Si aún no
+            nos probaste, todavía no conoces la auténtica empanada argentina.
           </p>
 
           <div

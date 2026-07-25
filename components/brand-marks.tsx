@@ -44,14 +44,18 @@ export function SpiceLevel({ level, className }: { level: 0 | 1 | 2 | 3; classNa
 
 /** Sello circular giratorio con texto */
 export function RotatingSeal({ className }: { className?: string }) {
-  const text = 'MALA MALA • EMPANADA ARG • '
+  // Texto base — MALA MASA • EMPANADA ARG •
+  // Se repite para llenar todo el círculo (circunferencia ≈ 238.76 unidades en viewBox 100x100)
+  // y que el sello quede cerrado sin espacio vacío.
+  const base = 'MALA MASA • EMPANADA ARG • '
+  const text = (base + base).slice(0, 50)
   return (
     <div className={cn('relative size-24 md:size-28', className)} aria-hidden="true">
       <svg viewBox="0 0 100 100" className="size-full animate-spin-slow">
         <defs>
           <path id="seal-circle" d="M 50 50 m -38 0 a 38 38 0 1 1 76 0 a 38 38 0 1 1 -76 0" />
         </defs>
-        <text className="fill-foreground/70 text-[9.5px] font-bold uppercase tracking-[0.22em]">
+        <text className="fill-foreground/70 text-[8.5px] font-bold uppercase tracking-[0.18em]">
           <textPath href="#seal-circle">{text}</textPath>
         </text>
       </svg>

@@ -13,6 +13,10 @@ const HERO_IMAGES = [
     src: '/images/empanadas-tray-2.png',
     alt: 'Empanadas Mala Masa recién horneadas listas para servir',
   },
+  {
+    src: '/images/empanadas-tray-3.png',
+    alt: 'Empanadas Mala Masa recién horneadas con relleno abundante',
+  },
 ]
 
 const CAROUSEL_INTERVAL = 10000 // 10 segundos por imagen

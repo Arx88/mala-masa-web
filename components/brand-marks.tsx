@@ -44,7 +44,7 @@ export function SpiceLevel({ level, className }: { level: 0 | 1 | 2 | 3; classNa
 
 /** Sello circular giratorio con texto */
 export function RotatingSeal({ className }: { className?: string }) {
-  const text = 'HECHA A MANO • MASA MADRE • EST. 2025 • '
+  const text = 'MALA MALA • EMPANADA ARG • '
   return (
     <div className={cn('relative size-24 md:size-28', className)} aria-hidden="true">
       <svg viewBox="0 0 100 100" className="size-full animate-spin-slow">

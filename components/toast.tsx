@@ -167,7 +167,7 @@ function ReminderContent({ toast, onDismiss }: { toast: Toast; onDismiss: () => 
               toast.action?.onClick()
               onDismiss()
             }}
-            className="btn-shine mt-2 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-transform duration-200 hover:scale-[1.04] active:scale-[0.98]"
+            className="btn-shine mt-2 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[12px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-transform duration-200 hover:scale-[1.04] active:scale-[0.98]"
           >
             {toast.action.label}
             <span aria-hidden="true" className="transition-transform duration-200">→</span>
@@ -175,13 +175,14 @@ function ReminderContent({ toast, onDismiss }: { toast: Toast; onDismiss: () => 
         )}
       </div>
 
-      {/* RIGHT: imagen (~42%) — sangra al borde derecho, full height */}
+      {/* RIGHT: imagen (~42%) — sangra al borde derecho, full height.
+          reminder-empanada.webp = caja abierta con empanadas (match referencia). */}
       <div className="relative w-[42%] shrink-0 overflow-hidden">
         <Image
-          src="/images/boxes-plate.webp"
+          src="/images/reminder-empanada.webp"
           alt=""
           fill
-          sizes="220px"
+          sizes="240px"
           className="object-cover"
           priority={false}
         />

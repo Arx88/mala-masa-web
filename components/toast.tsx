@@ -108,7 +108,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         }}
       >
         {/* === LADO IZQUIERDO: texto + botón (45%) === */}
-        <div className="flex w-[45%] flex-col justify-center gap-2 p-5">
+        <div className="flex w-[45%] flex-col justify-center gap-2.5 p-5">
           <p className="text-base font-extrabold uppercase tracking-tight text-foreground">
             {toast.title}
           </p>
@@ -124,7 +124,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
                 toast.action?.onClick()
                 handleDismiss()
               }}
-              className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+              className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
             >
               {toast.action.label}
               <span aria-hidden="true">→</span>

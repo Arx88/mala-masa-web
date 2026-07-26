@@ -109,23 +109,27 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
           '0 12px 32px -12px rgba(0,0,0,0.55), 0 4px 12px -4px rgba(0,0,0,0.35)',
       }}
     >
-      <div className="flex gap-3.5 p-4">
-        {/* === Iconografía: imagen real, no SVG embebido === */}
-        <div className="shrink-0 pt-0.5">
+      <div className="flex gap-4 p-4">
+        {/* === Iconografía: imagen real, no SVG embebido ===
+            ui-ux-pro-max: image-size — usar tamaño apropiado al display.
+            64x64 es lo mínimo para que una imagen con detalle se lea bien en un toast.
+            Alineación: self-start (top del contenedor) para alinear con la primera
+            línea de texto, no con el centro del bloque completo. */}
+        <div className="shrink-0 self-start">
           {toast.variant === 'reminder' && (
-            <div className="relative size-12 overflow-hidden rounded-lg">
+            <div className="relative size-16 overflow-hidden rounded-md">
               <Image
                 src="/images/reminder-empanada.webp"
                 alt=""
                 fill
-                sizes="48px"
+                sizes="64px"
                 className="object-contain"
                 priority={false}
               />
             </div>
           )}
-          {toast.variant === 'success' && <SuccessSealIcon className="size-8 text-accent" />}
-          {toast.variant === 'default' && <InfoIcon className="size-7 text-foreground/60" />}
+          {toast.variant === 'success' && <SuccessSealIcon className="size-9 text-accent" />}
+          {toast.variant === 'default' && <InfoIcon className="size-8 text-foreground/60" />}
         </div>
 
         <div className="min-w-0 flex-1">

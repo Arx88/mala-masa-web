@@ -67,9 +67,7 @@ export function CartReminder() {
 
         pushToast({
           title: '¿Te las llevás?',
-          description: `Tu pedido de ${count} ${
-            count === 1 ? 'empanada te espera' : 'empanadas te esperan'
-          } calentito. Un par de clics y listo.`,
+          description: `Tu pedido de ${count} empanada te esperan calentito. Un par de clics y listo.`,
           variant: 'reminder',
           duration: 10_000,
           action: {

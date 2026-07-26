@@ -95,7 +95,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
       <div
         role="status"
         className={cn(
-          'pointer-events-auto relative flex h-[140px] w-full max-w-[440px] overflow-hidden rounded-2xl bg-background transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'pointer-events-auto relative flex h-[176px] w-full max-w-[440px] overflow-hidden rounded-2xl bg-background transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
           'border border-border',
           entering && 'translate-y-3 opacity-0',
           !entering && !leaving && 'translate-y-0 opacity-100',
@@ -107,8 +107,8 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
             '0 10px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.5)',
         }}
       >
-        {/* === LADO IZQUIERDO: texto + botón (60%) === */}
-        <div className="flex w-[60%] flex-col justify-center gap-2 p-5">
+        {/* === LADO IZQUIERDO: texto + botón (50%) === */}
+        <div className="flex w-1/2 flex-col justify-center gap-2 p-5">
           <p className="text-base font-extrabold uppercase tracking-tight text-foreground">
             {toast.title}
           </p>
@@ -124,7 +124,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
                 toast.action?.onClick()
                 handleDismiss()
               }}
-              className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+              className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-primary-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
             >
               {toast.action.label}
               <span aria-hidden="true">→</span>
@@ -132,20 +132,20 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
           )}
         </div>
 
-        {/* === LADO DERECHO: imagen grande con bleed al borde (40%) === */}
-        <div className="relative w-[40%] shrink-0 overflow-hidden">
+        {/* === LADO DERECHO: imagen grande con bleed al borde (50%) === */}
+        <div className="relative w-1/2 shrink-0 overflow-hidden">
           <Image
-            src="/images/boxes-plate.webp"
+            src="/images/empanadas-tray.webp"
             alt=""
             fill
-            sizes="180px"
+            sizes="220px"
             className="object-cover"
             priority={false}
           />
           {/* Veladura sutil sobre la izquierda de la imagen para mejorar la transición */}
           <div
             aria-hidden="true"
-            className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-background to-transparent"
+            className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background via-background/70 to-transparent"
           />
         </div>
 

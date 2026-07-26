@@ -136,13 +136,21 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
   const [leaving, setLeaving] = useState(false)
 
   useEffect(() => {
-    const r = requestAnimationFrame(() => setEntering(false))
-    return () => cancelAnimationFrame(r)
+    // Doble requestAnimationFrame para asegurar que el browser aplique el estado
+    // inicial antes de la transición (sino la animación no se ve)
+    const r1 = requestAnimationFrame(() => {
+      const r2 = requestAnimationFrame(() => setEntering(false))
+      // Cleanup del segundo rAF
+      return () => cancelAnimationFrame(r2)
+    })
+    return () => cancelAnimationFrame(r1)
   }, [])
 
   const handleDismiss = () => {
     setLeaving(true)
-    setTimeout(onDismiss, 220)
+    // ui-ux-pro-max: exit-faster-than-enter — salida ~60-70% de la entrada
+    // Entrada 420ms → salida 280ms (se siente responsive, no se arrastra)
+    setTimeout(onDismiss, 280)
   }
 
   // Layout tipo referencia: imagen a la derecha (bleed al borde), texto+botón a la izquierda
@@ -152,11 +160,20 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
       <div
         role="status"
         className={cn(
-          'pointer-events-auto relative flex h-[176px] w-full max-w-[440px] overflow-hidden rounded-2xl bg-background transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
-          'border border-border',
-          entering && 'translate-y-3 opacity-0',
-          !entering && !leaving && 'translate-y-0 opacity-100',
-          leaving && 'translate-y-1 opacity-0',
+          'pointer-events-auto relative flex h-[176px] w-full max-w-[440px] overflow-hidden rounded-2xl bg-background border border-border',
+          // Transición base — duration y easing se aplican según estado
+          'transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]',
+          // === ENTRADA: slide-up + scale + opacity (spring-like easing) ===
+          // initial: translateY(16px) scale(0.92) opacity 0
+          // final:   translateY(0)    scale(1)    opacity 1
+          // duration 420ms (suficiente para notarse, no lento)
+          entering && 'translate-y-4 scale-[0.92] opacity-0 duration-[420ms]',
+          !entering && !leaving && 'translate-y-0 scale-100 opacity-100 duration-[420ms]',
+          // === SALIDA: slide-down + scale + opacity, más rápida (280ms) ===
+          // Easing lineal suave (cubic-bezier(0.4,0,0.6,1)) para salida
+          // initial: translateY(0)    scale(1)    opacity 1
+          // final:   translateY(8px)  scale(0.96) opacity 0
+          leaving && 'translate-y-2 scale-[0.96] opacity-0 duration-[280ms] ease-[cubic-bezier(0.4,0,0.6,1)]',
         )}
         style={{
           // Sombra oscura tight — Hallmark: no shadow-glow on dark
@@ -243,11 +260,11 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
     <div
       role="status"
       className={cn(
-        'pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-2xl bg-background/95 backdrop-blur-md transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        'border border-border',
-        entering && 'translate-y-3 opacity-0',
-        !entering && !leaving && 'translate-y-0 opacity-100',
-        leaving && 'translate-y-1 opacity-0',
+        'pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-2xl bg-background/95 backdrop-blur-md border border-border',
+        'transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]',
+        entering && 'translate-y-4 scale-[0.92] opacity-0 duration-[420ms]',
+        !entering && !leaving && 'translate-y-0 scale-100 opacity-100 duration-[420ms]',
+        leaving && 'translate-y-2 scale-[0.96] opacity-0 duration-[280ms] ease-[cubic-bezier(0.4,0,0.6,1)]',
       )}
       style={{
         boxShadow:

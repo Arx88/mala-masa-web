@@ -663,3 +663,53 @@
   from { width: 100%; }
   to { width: 0%; }
 }
+
+/* ---------- Animaciones de entrada y salida del toast ---------- */
+/* Usamos @keyframes en lugar de transition porque React puede remover
+   el elemento del DOM antes de que la transition termine.
+   Con @keyframes, la animación se ejecuta independientemente del DOM. */
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+/* Clase de entrada — spring con overshoot via cubic-bezier */
+.toast-entering {
+  animation: toast-enter 420ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Clase de salida — más rápida, easing suave sin overshoot */
+.toast-leaving {
+  animation: toast-exit 280ms cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+/* Estado visible (sin animación, solo mantener) */
+.toast-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-entering,
+  .toast-leaving {
+    animation: none !important;
+  }
+}

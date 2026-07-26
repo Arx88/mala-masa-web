@@ -168,19 +168,12 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         role="status"
         className={cn(
           'pointer-events-auto relative flex h-[176px] w-full max-w-[440px] overflow-hidden rounded-2xl bg-background border border-border',
-          // Transición base — duration y easing se aplican según estado
-          'transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]',
-          // === ENTRADA: slide-up + scale + opacity (spring-like easing) ===
-          // initial: translateY(16px) scale(0.92) opacity 0
-          // final:   translateY(0)    scale(1)    opacity 1
-          // duration 420ms (suficiente para notarse, no lento)
-          entering && 'translate-y-4 scale-[0.92] opacity-0 duration-[420ms]',
-          !entering && !leaving && 'translate-y-0 scale-100 opacity-100 duration-[420ms]',
-          // === SALIDA: slide-down + scale + opacity, más rápida (280ms) ===
-          // Easing lineal suave (cubic-bezier(0.4,0,0.6,1)) para salida
-          // initial: translateY(0)    scale(1)    opacity 1
-          // final:   translateY(8px)  scale(0.96) opacity 0
-          leaving && 'translate-y-2 scale-[0.96] opacity-0 duration-[280ms] ease-[cubic-bezier(0.4,0,0.6,1)]',
+          // Usar clases CSS @keyframes en lugar de Tailwind transitions
+          // para garantizar que la animación se ejecute antes de que React
+          // remueva el elemento del DOM.
+          entering && 'toast-entering',
+          !entering && !leaving && 'toast-visible',
+          leaving && 'toast-leaving',
         )}
         style={{
           // Sombra oscura tight — Hallmark: no shadow-glow on dark
@@ -268,10 +261,9 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
       role="status"
       className={cn(
         'pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-2xl bg-background/95 backdrop-blur-md border border-border',
-        'transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]',
-        entering && 'translate-y-4 scale-[0.92] opacity-0 duration-[420ms]',
-        !entering && !leaving && 'translate-y-0 scale-100 opacity-100 duration-[420ms]',
-        leaving && 'translate-y-2 scale-[0.96] opacity-0 duration-[280ms] ease-[cubic-bezier(0.4,0,0.6,1)]',
+        entering && 'toast-entering',
+        !entering && !leaving && 'toast-visible',
+        leaving && 'toast-leaving',
       )}
       style={{
         boxShadow:

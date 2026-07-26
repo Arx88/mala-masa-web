@@ -178,8 +178,8 @@ function ReminderContent({ toast, onDismiss }: { toast: Toast; onDismiss: () => 
 
       {/* RIGHT: imagen (~42%) — sangra al borde derecho, full height.
           reminder-empanada.webp = caja abierta con empanadas (match referencia).
-          h-full asegura que la imagen llene toda la altura del toast. */}
-      <div className="relative h-full w-[42%] shrink-0 overflow-hidden">
+          Sin h-full: depende de flex align-items:stretch (default) para llenar altura. */}
+      <div className="relative w-[42%] shrink-0 self-stretch overflow-hidden">
         <Image
           src="/images/reminder-empanada.webp"
           alt=""

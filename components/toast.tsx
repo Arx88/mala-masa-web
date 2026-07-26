@@ -120,8 +120,9 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         <DefaultContent toast={toast} onDismiss={handleDismiss} />
       )}
 
-      {/* Barra de progreso de auto-dismiss — sutil, sin color agresivo */}
-      {toast.duration && toast.duration > 0 && (
+      {/* Barra de progreso de auto-dismiss — solo para variants default/success.
+          Reminder no la muestra (match referencia, sin artefacto sobre la imagen). */}
+      {!isReminder && toast.duration && toast.duration > 0 && (
         <span
           aria-hidden="true"
           className="absolute bottom-0 left-0 z-20 h-0.5 bg-foreground/30"
@@ -176,8 +177,9 @@ function ReminderContent({ toast, onDismiss }: { toast: Toast; onDismiss: () => 
       </div>
 
       {/* RIGHT: imagen (~42%) — sangra al borde derecho, full height.
-          reminder-empanada.webp = caja abierta con empanadas (match referencia). */}
-      <div className="relative w-[42%] shrink-0 overflow-hidden">
+          reminder-empanada.webp = caja abierta con empanadas (match referencia).
+          h-full asegura que la imagen llene toda la altura del toast. */}
+      <div className="relative h-full w-[42%] shrink-0 overflow-hidden">
         <Image
           src="/images/reminder-empanada.webp"
           alt=""

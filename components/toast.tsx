@@ -27,17 +27,74 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }, [])
 
+  // Sonido minimalista tipo "ting" usando Web Audio API.
+  // - Solo para variant 'reminder' (no spamear en toasts genéricos)
+  // - Respeta prefers-reduced-motion (si el usuario pidió menos motion, tampoco sonido)
+  // - Frecuencias: dos notas ascendentes (E6 → A6) tipo campanita suave
+  // - Volumen bajo (0.06) para ser sutil
+  // - Sin archivos externos — generado al vuelo, 0KB de bundle extra
+  const playReminderSound = useCallback(() => {
+    if (typeof window === 'undefined') return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioCtx) return
+      const ctx = new AudioCtx()
+
+      // Notas: E6 (1318.51 Hz) → A6 (1760 Hz), intervalo de cuarta justa, suave y alegre
+      const notes = [
+        { freq: 1318.51, start: 0, dur: 0.18 },
+        { freq: 1760.0, start: 0.08, dur: 0.28 },
+      ]
+
+      const masterGain = ctx.createGain()
+      masterGain.gain.value = 0.06 // muy sutil
+      masterGain.connect(ctx.destination)
+
+      notes.forEach(({ freq, start, dur }) => {
+        const osc = ctx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = freq
+
+        // Envelope ADSR simple: ataque rápido, decaimiento suave
+        const gain = ctx.createGain()
+        const t0 = ctx.currentTime + start
+        gain.gain.setValueAtTime(0, t0)
+        gain.gain.linearRampToValueAtTime(1, t0 + 0.01) // ataque 10ms
+        gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur) // decaimiento exponencial
+
+        osc.connect(gain)
+        gain.connect(masterGain)
+        osc.start(t0)
+        osc.stop(t0 + dur + 0.05)
+      })
+
+      // Limpiar el context después de que termine
+      setTimeout(() => {
+        ctx.close().catch(() => {})
+      }, 600)
+    } catch {
+      // Si falla Web Audio (ej: autoplay policy), silenciosamente no hacer nada
+    }
+  }, [])
+
   const push = useCallback(
     (t: Omit<Toast, 'id'>) => {
       const id = Date.now() + Math.random()
       const toast: Toast = { id, duration: 4500, variant: 'default', ...t }
       setToasts((prev) => [...prev, toast])
+
+      // Sonido solo para reminder (no spamear en success/default)
+      if (toast.variant === 'reminder') {
+        playReminderSound()
+      }
+
       if (toast.duration && toast.duration > 0) {
         setTimeout(() => dismiss(id), toast.duration)
       }
       return id
     },
-    [dismiss],
+    [dismiss, playReminderSound],
   )
 
   return (

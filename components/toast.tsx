@@ -99,10 +99,10 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
     <div
       role="status"
       className={cn(
-        'pointer-events-auto relative overflow-hidden border border-border bg-background/95 backdrop-blur-md transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'pointer-events-auto relative overflow-hidden border border-border transition-all duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]',
         isReminder
-          ? 'flex w-full max-w-[480px] rounded-[14px]'
-          : 'w-full max-w-sm rounded-2xl',
+          ? 'flex w-full max-w-[480px] rounded-[12px] bg-background'
+          : 'w-full max-w-sm rounded-2xl bg-background/95 backdrop-blur-md',
         entering && 'translate-y-3 opacity-0',
         !entering && !leaving && 'translate-y-0 opacity-100',
         leaving && 'translate-y-1 opacity-0',
@@ -151,8 +151,8 @@ function ReminderContent({ toast, onDismiss }: { toast: Toast; onDismiss: () => 
   return (
     <>
       {/* LEFT: bloque de texto (~58%) */}
-      <div className="flex w-[58%] shrink-0 flex-col gap-2 p-5">
-        <p className="text-[19px] font-extrabold uppercase leading-tight tracking-tight text-foreground">
+      <div className="flex w-[58%] shrink-0 flex-col gap-2 p-4">
+        <p className="text-[19px] font-black uppercase leading-tight tracking-tight text-foreground">
           {toast.title}
         </p>
         {toast.description && (

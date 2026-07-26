@@ -107,8 +107,8 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
             '0 10px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.5)',
         }}
       >
-        {/* === LADO IZQUIERDO: texto + botón (50%) === */}
-        <div className="flex w-1/2 flex-col justify-center gap-2 p-5">
+        {/* === LADO IZQUIERDO: texto + botón (45%) === */}
+        <div className="flex w-[45%] flex-col justify-center gap-2 p-5">
           <p className="text-base font-extrabold uppercase tracking-tight text-foreground">
             {toast.title}
           </p>
@@ -132,13 +132,15 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
           )}
         </div>
 
-        {/* === LADO DERECHO: imagen grande con bleed al borde (50%) === */}
-        <div className="relative w-1/2 shrink-0 overflow-hidden">
+        {/* === LADO DERECHO: imagen grande con bleed al borde (55%) ===
+            Usamos boxes-plate.webp porque la referencia muestra la caja
+            de Mala Masa con empanadas — no un close-up de una empanada. */}
+        <div className="relative w-[55%] shrink-0 overflow-hidden">
           <Image
-            src="/images/empanadas-tray.webp"
+            src="/images/boxes-plate.webp"
             alt=""
             fill
-            sizes="220px"
+            sizes="240px"
             className="object-cover"
             priority={false}
           />
@@ -149,7 +151,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
           />
         </div>
 
-        {/* === Close button: top-right sobre la imagen === */}
+        {/* === Close button: top-right (sobre la imagen, con backdrop sutil) === */}
         <button
           type="button"
           onClick={handleDismiss}

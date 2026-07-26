@@ -191,17 +191,58 @@ export function CartDrawer() {
     }
     // UX rule: submit-feedback — loading then success
     setSubmitting(true)
-    await new Promise((r) => setTimeout(r, 1200))
-    setSubmitting(false)
-    setOrderNumber('MM-' + Math.random().toString(36).slice(2, 8).toUpperCase())
-    setStep('success')
-    // Toast de confirmación
-    pushToast({
-      title: '¡Pedido confirmado!',
-      description: `Tu número es MM-${orderNumber.slice(3) || 'XXXXXX'}. Te avisamos cuando salga del horno.`,
-      variant: 'success',
-      duration: 5000,
-    })
+
+    try {
+      // Enviar pedido real a la API → Supabase → Terminal
+      const response = await fetch('/api/pedidos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map(({ product, qty }) => ({
+            productId: product.id,
+            name: product.name,
+            qty,
+            price: product.price,
+          })),
+          customer: {
+            name: order.name,
+            phone: order.phone,
+            address: order.address || undefined,
+          },
+          modality: order.mode,
+          payment: payment.method,
+          scheduledTime: order.time === 'schedule' ? order.scheduledTime : undefined,
+          notes: order.notes || undefined,
+          total: grandTotal,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Error al procesar el pedido')
+      }
+
+      setSubmitting(false)
+      setOrderNumber(data.orderNumber)
+      setStep('success')
+      // Toast de confirmación
+      pushToast({
+        title: '¡Pedido confirmado!',
+        description: `Tu número es ${data.orderNumber}. Te avisamos cuando salga del horno.`,
+        variant: 'success',
+        duration: 5000,
+      })
+    } catch (error) {
+      setSubmitting(false)
+      // Mostrar error al usuario con opción de reintentar
+      pushToast({
+        title: 'No se pudo enviar el pedido',
+        description: error instanceof Error ? error.message : 'Error desconocido. Intentá de nuevo.',
+        variant: 'default',
+        duration: 8000,
+      })
+    }
   }
 
   const handleFinish = () => {

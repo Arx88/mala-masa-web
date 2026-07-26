@@ -66,7 +66,7 @@ export function CartReminder() {
         lastInteractionRef.current = now // reset para no disparar de nuevo
 
         pushToast({
-          title: '¿Te las llevás?',
+          title: '¡Que no se enfríen!',
           description: `Tu pedido de ${count} empanada te esperan calentito. Un par de clics y listo.`,
           variant: 'reminder',
           duration: 10_000,

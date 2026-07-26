@@ -656,3 +656,10 @@
   }
   .cursor-dot { display: none; }
 }
+
+/* ---------- Barrita de progreso del toast (countdown visual) ---------- */
+/* Se achica de 100% → 0% en (duration)ms. Lineal para que sea predecible. */
+@keyframes toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}

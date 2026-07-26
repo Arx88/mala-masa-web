@@ -69,7 +69,7 @@ export function CartReminder() {
           title: '¡Que no se enfríen!',
           description: `Tu pedido de ${count} empanada te esperan calentito. Un par de clics y listo.`,
           variant: 'reminder',
-          duration: 20_000,
+          duration: 25_000,
           action: {
             label: 'Ver pedido',
             onClick: () => {

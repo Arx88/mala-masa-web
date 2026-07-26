@@ -219,6 +219,21 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
             <path d="M3 3l8 8M11 3L3 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         </button>
+
+        {/* === Barrita de progreso inferior ===
+            Muestra cuánto tiempo queda hasta que el toast desaparezca.
+            Se achica de 100% → 0% en (duration)ms.
+            Color: accent (mostaza) — sutil pero visible sobre el bg carbón.
+            Aria-hidden: decorativo, no anunciable a screen readers. */}
+        {toast.duration && toast.duration > 0 && (
+          <span
+            aria-hidden="true"
+            className="absolute bottom-0 left-0 z-20 h-0.5 bg-accent/70"
+            style={{
+              animation: `toast-progress ${toast.duration}ms linear forwards`,
+            }}
+          />
+        )}
       </div>
     )
   }

@@ -133,11 +133,11 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         </div>
 
         {/* === LADO DERECHO: imagen grande con bleed al borde (55%) ===
-            Usamos boxes-plate.webp porque la referencia muestra la caja
-            de Mala Masa con empanadas — no un close-up de una empanada. */}
+            Usamos reminder-empanada.webp — la imagen que el usuario envió
+            vía wormhole.app: caja Mala Masa abierta con empanadas. */}
         <div className="relative w-[55%] shrink-0 overflow-hidden">
           <Image
-            src="/images/boxes-plate.webp"
+            src="/images/reminder-empanada.webp"
             alt=""
             fill
             sizes="240px"

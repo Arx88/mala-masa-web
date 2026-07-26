@@ -6,16 +6,16 @@ import { RotatingSeal, SprayStar } from '@/components/brand-marks'
 
 const HERO_IMAGES = [
   {
-    src: '/images/empanadas-tray.png',
-    alt: 'Dos empanadas Mala Masa recién horneadas sobre papel de marca',
+    src: '/images/empanadas-tray.webp',
+    alt: 'Empanadas argentinas Mala Masa recién horneadas sobre papel de marca, masa madre y repulgue a mano',
   },
   {
-    src: '/images/empanadas-tray-2.png',
-    alt: 'Empanadas Mala Masa recién horneadas listas para servir',
+    src: '/images/empanadas-tray-2.webp',
+    alt: 'Empanadas argentinas artesanas Mala Masa listas para servir, horno de piedra',
   },
   {
-    src: '/images/empanadas-tray-3.png',
-    alt: 'Empanadas Mala Masa recién horneadas con relleno abundante',
+    src: '/images/empanadas-tray-3.webp',
+    alt: 'Empanadas Mala Masa con relleno abundante, hechas a mano en España',
   },
 ]
 

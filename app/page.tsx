@@ -1,7 +1,7 @@
 import { BrandTicker } from '@/components/brand-ticker'
-import { CartDrawer } from '@/components/cart-drawer'
 import { CartProvider } from '@/components/cart-context'
 import { CartReminder } from '@/components/cart-reminder'
+import { CartDrawerLazy } from '@/components/cart-drawer-lazy'
 import { Carta } from '@/components/carta'
 import { Hero } from '@/components/hero'
 import { Localizacion } from '@/components/localizacion'
@@ -32,7 +32,7 @@ export default function Home() {
           <Localizacion />
         </main>
         <SiteFooter />
-        <CartDrawer />
+        <CartDrawerLazy />
         <CartReminder />
       </CartProvider>
     </ToastProvider>

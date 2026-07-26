@@ -24,7 +24,7 @@ export function Localizacion() {
         <Reveal className="relative order-2 md:order-1">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg md:aspect-[3/4]">
             <Image
-              src="/images/local-madrid.png"
+              src="/images/local-madrid.webp"
               alt="Fachada nocturna del local Mala Masa con luz cálida saliendo del interior"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

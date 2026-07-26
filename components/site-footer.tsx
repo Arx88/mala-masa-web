@@ -44,7 +44,7 @@ export function SiteFooter() {
       <div className="relative">
         <div className="relative min-h-[420px] md:min-h-[520px]">
           <Image
-            src="/images/boxes-plate.png"
+            src="/images/boxes-plate.webp"
             alt="Cajas Mala Masa apiladas junto a un plato de empanadas sobre fondo negro"
             fill
             sizes="100vw"
@@ -84,7 +84,7 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-7xl flex-col gap-10 px-5 py-14 md:px-8 md:py-16">
           <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
             <Image
-              src="/images/logo-script-white.png"
+              src="/images/logo-script-white.webp"
               alt="Mala Masa"
               width={220}
               height={122}

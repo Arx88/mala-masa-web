@@ -1,0 +1,11 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+
+User-Agent: Googlebot
+Allow: /
+Disallow: /api/
+
+Host: https://mala-masa-web.vercel.app
+Sitemap: https://mala-masa-web.vercel.app/sitemap.xml

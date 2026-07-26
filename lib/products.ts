@@ -17,7 +17,7 @@ export const empanadas: Product[] = [
     description:
       'Cebolla, Pimiento, Papa, Roast Beef Braseado al vino tinto durante 4hs.',
     price: 3.9,
-    image: '/images/emp-carne.png',
+    image: '/images/emp-carne.webp',
     spice: 1,
     tag: 'La más pedida',
   },
@@ -28,7 +28,7 @@ export const empanadas: Product[] = [
     description:
       'Blend de carne molida premium, cebolla, pimientos, huevo, especias y salsa casera de ají picante.',
     price: 4.2,
-    image: '/images/emp-picante.png',
+    image: '/images/emp-picante.webp',
     spice: 3,
     tag: 'Pica de verdad',
   },
@@ -39,7 +39,7 @@ export const empanadas: Product[] = [
     description:
       'Pollo de Corral a baja temperatura, cebolla, pimiento, huevo, condimentos varios, hidratado con caldo de gallina casero.',
     price: 3.9,
-    image: '/images/emp-pollo.png',
+    image: '/images/emp-pollo.webp',
     spice: 1,
   },
   {
@@ -49,7 +49,7 @@ export const empanadas: Product[] = [
     description:
       'Jamón cocido natural premium, con muzarella, huevo y mezcla de quesos.',
     price: 3.7,
-    image: '/images/emp-jyq.png',
+    image: '/images/emp-jyq.webp',
     spice: 0,
   },
   {
@@ -59,7 +59,7 @@ export const empanadas: Product[] = [
     description:
       'MAÍZ RALLADO, CEBOLLA, PIMIENTO, SALSA BLANCA, QUESOS VARIOS.',
     price: 3.7,
-    image: '/images/emp-humita.png',
+    image: '/images/emp-humita.webp',
     spice: 0,
   },
   {
@@ -69,7 +69,7 @@ export const empanadas: Product[] = [
     description:
       'Queso muzarella, cheddar blanco curado, provolone, cebolla caramelizada.',
     price: 3.7,
-    image: '/images/emp-espinaca.png',
+    image: '/images/emp-espinaca.webp',
     spice: 0,
   },
 ]
@@ -81,7 +81,7 @@ export const merch: Product[] = [
     tagline: 'Salsa cheddar cremosa',
     description: 'Nuestra salsa cheddar cremosa de la casa. Perfecta para dippear tus empanadas favoritas.',
     price: 3,
-    image: '/images/salsa-cheddar.png',
+    image: '/images/salsa-cheddar.webp',
     spice: 0,
   },
   {
@@ -90,7 +90,7 @@ export const merch: Product[] = [
     tagline: 'Empanada a espray en la espalda',
     description: 'Serigrafía artesanal de la empanada stencil, edición numerada.',
     price: 36,
-    image: '/images/tee-back.png',
+    image: '/images/tee-back.webp',
     spice: 0,
     tag: 'Edición limitada',
   },
@@ -100,7 +100,7 @@ export const merch: Product[] = [
     tagline: 'Chile fermentado, ajo y lima',
     description: 'Nuestra sour sauce de la casa embotellada. Brillante, ácida y adictiva. 207 ml.',
     price: 3,
-    image: '/images/salsa-acida.png',
+    image: '/images/salsa-acida.webp',
     spice: 2,
   },
 ]

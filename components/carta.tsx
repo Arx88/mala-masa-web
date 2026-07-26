@@ -174,7 +174,7 @@ export function Carta() {
             <div className="grid md:grid-cols-[1.1fr_1fr]">
               <div className="relative min-h-56 md:min-h-full">
                 <Image
-                  src="/images/box-handle.png"
+                  src="/images/box-handle.webp"
                   alt="Caja de delivery Mala Masa con asa y salpicaduras de pintura"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

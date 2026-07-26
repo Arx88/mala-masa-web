@@ -73,7 +73,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 md:px-8 h-20 md:h-24">
         <a href="#top" className="shrink-0" aria-label="Mala Masa — inicio">
           <Image
-            src="/images/logo-script-white.png"
+            src="/images/logo-script-white.webp"
             alt="Mala Masa"
             width={200}
             height={91}

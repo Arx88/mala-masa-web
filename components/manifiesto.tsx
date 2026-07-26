@@ -120,7 +120,7 @@ export function Manifiesto() {
           <Reveal className="relative w-full" delay={200}>
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg md:aspect-[3/4]">
               <Image
-                src="/images/boxes-stack.png"
+                src="/images/boxes-stack.webp"
                 alt="Torre de cajas Mala Masa con salpicaduras de pintura roja y dorada"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

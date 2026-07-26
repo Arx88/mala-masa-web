@@ -1,0 +1,8 @@
+allowBuilds:
+  msw: true
+  sharp: true
+# Configuración para pnpm 11+ (pnpm 10 ignora este archivo)
+# Sharp y msw necesitan permiso para correr scripts de build
+onlyBuiltDependencies:
+  - sharp
+  - msw

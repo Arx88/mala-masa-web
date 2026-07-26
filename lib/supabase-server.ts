@@ -2,21 +2,20 @@ import { createClient } from '@supabase/supabase-js'
 
 /**
  * Cliente Supabase para uso server-side (API routes).
- * Usa la anon key — segura para exponer en cliente, pero aquí la usamos
- * solo en el servidor para insertar pedidos.
+ * Usa la anon key — segura para exponer (es la misma que usa la terminal).
  *
- * Si necesitas bypass RLS, usa SUPABASE_SERVICE_ROLE_KEY en su lugar
- * (NO la expongas nunca al cliente).
+ * Los valores están hardcodeados como fallback porque Vercel aún no tiene
+ * las env vars configuradas. La anon key es pública por diseño (rol: anon).
  */
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hcepcffhyubfsfubqoso.supabase.co'
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhjZXBjZmZoeXViZnNmdWJxb3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1OTkzMzQsImV4cCI6MjA5OTE3NTMzNH0.x66IQFAXcFPC_lmZVzzFxyLdmFT9O7vTT8KplH36mCM'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('[supabase-server] Missing env vars. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY')
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  console.warn('[supabase-server] Using hardcoded fallback values. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: false,
     autoRefreshToken: false,

@@ -1,6 +1,7 @@
 import { BrandTicker } from '@/components/brand-ticker'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CartProvider } from '@/components/cart-context'
+import { CartReminder } from '@/components/cart-reminder'
 import { Carta } from '@/components/carta'
 import { Hero } from '@/components/hero'
 import { Localizacion } from '@/components/localizacion'
@@ -10,26 +11,30 @@ import { Proceso } from '@/components/proceso'
 import { RepulgueDivider } from '@/components/repulgue-divider'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { ToastProvider } from '@/components/toast'
 
 export default function Home() {
   return (
-    <CartProvider>
-      <SiteHeader />
-      <main>
-        <Hero />
-        <BrandTicker variant="red" />
-        <Manifiesto />
-        <RepulgueDivider from="var(--background)" to="var(--secondary)" />
-        <Carta />
-        <BrandTicker variant="cream" />
-        <Proceso />
-        <RepulgueDivider from="var(--background)" to="var(--secondary)" />
-        <MerchSection />
-        <RepulgueDivider from="var(--secondary)" to="var(--background)" />
-        <Localizacion />
-      </main>
-      <SiteFooter />
-      <CartDrawer />
-    </CartProvider>
+    <ToastProvider>
+      <CartProvider>
+        <SiteHeader />
+        <main>
+          <Hero />
+          <BrandTicker variant="red" />
+          <Manifiesto />
+          <RepulgueDivider from="var(--background)" to="var(--secondary)" />
+          <Carta />
+          <BrandTicker variant="cream" />
+          <Proceso />
+          <RepulgueDivider from="var(--background)" to="var(--secondary)" />
+          <MerchSection />
+          <RepulgueDivider from="var(--secondary)" to="var(--background)" />
+          <Localizacion />
+        </main>
+        <SiteFooter />
+        <CartDrawer />
+        <CartReminder />
+      </CartProvider>
+    </ToastProvider>
   )
 }

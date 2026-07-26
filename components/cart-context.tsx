@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { Product } from '@/lib/products'
 
 export type CartItem = {
@@ -14,6 +14,7 @@ type CartState = {
   add: (product: Product, qty?: number) => void
   remove: (id: string) => void
   setQty: (id: string, qty: number) => void
+  clear: () => void
   open: () => void
   close: () => void
   count: number
@@ -51,14 +52,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     )
   }, [])
 
+  const clear = useCallback(() => setItems([]), [])
+
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
+
+  // Escuchar evento global 'cart:open' (lo dispara el CartReminder toast)
+  useEffect(() => {
+    const onOpen = () => setIsOpen(true)
+    window.addEventListener('cart:open', onOpen)
+    return () => window.removeEventListener('cart:open', onOpen)
+  }, [])
 
   const value = useMemo<CartState>(() => {
     const count = items.reduce((n, i) => n + i.qty, 0)
     const total = items.reduce((n, i) => n + i.qty * i.product.price, 0)
-    return { items, isOpen, add, remove, setQty, open, close, count, total }
-  }, [items, isOpen, add, remove, setQty, open, close])
+    return { items, isOpen, add, remove, setQty, clear, open, close, count, total }
+  }, [items, isOpen, add, remove, setQty, clear, open, close])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

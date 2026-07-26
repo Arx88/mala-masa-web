@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { RotatingSeal, SprayStar } from '@/components/brand-marks'
 
 const HERO_IMAGES = [
@@ -19,34 +19,39 @@ const HERO_IMAGES = [
   },
 ]
 
-const CAROUSEL_INTERVAL = 10000 // 10 segundos por imagen
+const CAROUSEL_INTERVAL = 7000 // 7 segundos por imagen
+const FADE_DUR = 1400 // duración del crossfade de opacidad
+const BLUR_DUR = 700 // blur solo durante la primera mitad del crossfade
 
-/** Vapor sutil que sube desde la base del hero */
+/** Vapor sutil que sube desde la base del hero — drift horizontal sutil */
 function Steam() {
   const puffs = [
-    { left: '58%', size: 130, delay: 0, dur: 9 },
-    { left: '68%', size: 100, delay: 2.4, dur: 10.5 },
-    { left: '78%', size: 150, delay: 4.8, dur: 8.5 },
-    { left: '88%', size: 110, delay: 6.6, dur: 11 },
+    { left: '56%', size: 140, delay: 0,    dur: 9,    drift: 14,  opacity: 0.16 },
+    { left: '64%', size: 100, delay: 1.8,  dur: 10.5, drift: -10, opacity: 0.12 },
+    { left: '72%', size: 160, delay: 3.6,  dur: 8.5,  drift: 18,  opacity: 0.18 },
+    { left: '80%', size: 110, delay: 5.4,  dur: 11,   drift: -14, opacity: 0.13 },
+    { left: '88%', size: 130, delay: 7.2,  dur: 9.5,  drift: 8,   opacity: 0.14 },
   ]
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[65%] overflow-hidden md:block"
+      className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[70%] overflow-hidden md:block"
     >
-      {puffs.map((p) => (
+      {puffs.map((p, i) => (
         <span
-          key={p.left}
+          key={i}
           className="animate-steam absolute bottom-0 rounded-full blur-2xl"
           style={
             {
               left: p.left,
               width: p.size,
               height: p.size,
+              opacity: p.opacity,
               background:
-                'radial-gradient(circle, oklch(0.94 0.02 85 / 14%), transparent 68%)',
+                'radial-gradient(circle, oklch(0.94 0.02 85 / 22%), transparent 68%)',
               '--steam-delay': `${p.delay}s`,
               '--steam-dur': `${p.dur}s`,
+              '--steam-drift': `${p.drift}px`,
             } as React.CSSProperties
           }
         />
@@ -55,26 +60,109 @@ function Steam() {
   )
 }
 
+/** Pill "hornando ahora" — rediseñado sin punto rojo ping.
+ *  Estilo editorial: sello pequeño con un wisp de vapor SVG en vez del
+ *  clásico "live dot" que leímos como AI-slop. La hora va entre paréntesis
+ *  tipográficos para asimilarla al contenido, no como separador decorativo. */
+function LiveBaking() {
+  const [status, setStatus] = useState<'open' | 'closed' | 'soon'>('closed')
+  const [time, setTime] = useState<string>('')
+
+  useEffect(() => {
+    const calc = () => {
+      const now = new Date()
+      const day = now.getDay() // 0 dom ... 6 sáb
+      const hour = now.getHours() + now.getMinutes() / 60
+
+      let isOpen = false
+      let closingSoon = false
+
+      if (day >= 2 && day <= 4) {
+        isOpen = hour >= 12 && hour < 22.5
+        closingSoon = isOpen && hour >= 21.5
+      } else if (day === 5 || day === 6) {
+        isOpen = hour >= 12 && hour < 24
+        closingSoon = isOpen && hour >= 23
+      } else if (day === 0) {
+        isOpen = hour >= 12 && hour < 17
+        closingSoon = isOpen && hour >= 16
+      }
+
+      setStatus(closingSoon ? 'soon' : isOpen ? 'open' : 'closed')
+      setTime(
+        now.toLocaleTimeString('es-ES', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      )
+    }
+    calc()
+    const id = setInterval(calc, 30_000)
+    return () => clearInterval(id)
+  }, [])
+
+  if (status === 'closed') return null
+
+  const label = status === 'soon' ? 'Cerramos pronto' : 'Hornando ahora'
+
+  return (
+    <div
+      className="rise pointer-events-none mb-6 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70"
+      style={{ '--rise-delay': '180ms' } as React.CSSProperties}
+      aria-live="polite"
+    >
+      {/* Wisp — tres líneas tipo vapor, NO un dot pulsante */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 14 16"
+        className="size-3.5 text-accent"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      >
+        <path d="M3 14 C 1 10, 5 8, 3 4" opacity="0.9" />
+        <path d="M7 14 C 5 10, 9 8, 7 4" opacity="0.7" />
+        <path d="M11 14 C 9 10, 13 8, 11 4" opacity="0.45" />
+      </svg>
+      <span className="text-foreground/85">{label}</span>
+      <span className="text-foreground/30">/</span>
+      <span className="tabular-nums text-foreground/55">{time}</span>
+    </div>
+  )
+}
+
 export function Hero() {
   const [loaded, setLoaded] = useState(false)
   const [currentImage, setCurrentImage] = useState(0)
+  const [prevImage, setPrevImage] = useState(0)
+  const [transitioning, setTransitioning] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const ctaRef = useRef<HTMLAnchorElement>(null)
+  const backdropRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setLoaded(true))
     return () => cancelAnimationFrame(t)
   }, [])
 
-  // Auto-advance del carrusel
+  // Auto-advance del carrusel — con flag de transición para acotar el blur
   useEffect(() => {
     if (!loaded) return
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % HERO_IMAGES.length)
+      setTransitioning(true)
+      setCurrentImage((prev) => {
+        setPrevImage(prev)
+        return (prev + 1) % HERO_IMAGES.length
+      })
+      // El blur solo dura BLUR_DUR, no toda la transición de opacidad
+      const t = setTimeout(() => setTransitioning(false), BLUR_DUR)
+      return () => clearTimeout(t)
     }, CAROUSEL_INTERVAL)
     return () => clearInterval(interval)
   }, [loaded])
 
-  // Parallax suave siguiendo el puntero (solo en dispositivos con ratón)
+  // Parallax 3 capas siguiendo el puntero (solo desktop)
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
@@ -89,13 +177,23 @@ export function Hero() {
         const rect = el.getBoundingClientRect()
         const x = (e.clientX - rect.left) / rect.width - 0.5
         const y = (e.clientY - rect.top) / rect.height - 0.5
+        // Capa 1: imagen de fondo (movimiento más amplio)
         el.style.setProperty('--px', String(-x.toFixed(3)))
         el.style.setProperty('--py', String(-y.toFixed(3)))
+        // Capa 2: backdrop tipográfico (movimiento medio, dirección opuesta)
+        if (backdropRef.current) {
+          backdropRef.current.style.setProperty('--bx', String((x * 24).toFixed(2)))
+          backdropRef.current.style.setProperty('--by', String((y * 14).toFixed(2)))
+        }
       })
     }
     const onLeave = () => {
       el.style.setProperty('--px', '0')
       el.style.setProperty('--py', '0')
+      if (backdropRef.current) {
+        backdropRef.current.style.setProperty('--bx', '0')
+        backdropRef.current.style.setProperty('--by', '0')
+      }
     }
 
     el.addEventListener('pointermove', onMove)
@@ -107,6 +205,22 @@ export function Hero() {
     }
   }, [])
 
+  // Magnetic CTA
+  const handleCtaMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    const el = ctaRef.current
+    if (!el) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const rect = el.getBoundingClientRect()
+    const x = (e.clientX - rect.left - rect.width / 2) / rect.width
+    const y = (e.clientY - rect.top - rect.height / 2) / rect.height
+    el.style.transform = `translate(${x * 6}px, ${y * 4}px)`
+  }, [])
+  const handleCtaLeave = useCallback(() => {
+    const el = ctaRef.current
+    if (!el) return
+    el.style.transform = ''
+  }, [])
+
   return (
     <section
       ref={sectionRef}
@@ -115,35 +229,72 @@ export function Hero() {
         loaded ? 'is-in' : ''
       }`}
     >
-      {/* Carrusel de fotos de producto como fondo */}
-      <div className="absolute inset-0">
-        {HERO_IMAGES.map((img, i) => (
-          <div
-            key={img.src}
-            className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
-              loaded && i === currentImage ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <div className="hero-parallax absolute -inset-6">
-              <div
-                className={`absolute inset-0 ${
-                  loaded && i === currentImage ? 'animate-hero-drift' : ''
-                }`}
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                  className={`object-cover object-center transition-all duration-[2200ms] ease-out md:object-[70%_center] ${
-                    loaded && i === currentImage ? 'scale-100' : 'scale-[1.12]'
+      {/* Backdrop tipográfico gigante — "MALA / MASA" repetido en vertical,
+          parallax propio, semi-transparente. Da profundidad sin tapar la foto. */}
+      <div
+        ref={backdropRef}
+        aria-hidden="true"
+        className="hero-backdrop pointer-events-none absolute inset-0 z-0 hidden md:block"
+      >
+        <div className="hero-backdrop__col hero-backdrop__col--left">
+          <span>MALA</span>
+          <span>MASA</span>
+          <span>MALA</span>
+          <span>MASA</span>
+        </div>
+        <div className="hero-backdrop__col hero-backdrop__col--right">
+          <span>2026</span>
+          <span>MMXXVI</span>
+          <span>MADRID</span>
+        </div>
+      </div>
+
+      {/* Carrusel de fotos de producto — crossfade con blur ACOTADO a la transición */}
+      <div className="absolute inset-0 z-[1]">
+        {HERO_IMAGES.map((img, i) => {
+          const isCurrent = loaded && i === currentImage
+          const isPrev = loaded && i === prevImage && i !== currentImage
+          const visible = isCurrent || isPrev
+          return (
+            <div
+              key={img.src}
+              className={`absolute inset-0 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                visible ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                transitionDuration: `${FADE_DUR}ms`,
+                // El blur SOLO aplica a la imagen previa durante el flag de transición.
+                // Cuando el flag cae (a los BLUR_DUR ms), la imagen previa vuelve a nítidez
+                // y la transición de opacity continúa limpia.
+                filter:
+                  isPrev && transitioning
+                    ? 'blur(14px) saturate(1.05)'
+                    : 'blur(0px)',
+                transition: `opacity ${FADE_DUR}ms cubic-bezier(0.22,1,0.36,1), filter ${BLUR_DUR}ms ease-out`,
+              }}
+            >
+              <div className="hero-parallax absolute -inset-6">
+                <div
+                  className={`absolute inset-0 ${
+                    isCurrent ? 'animate-hero-drift' : ''
                   }`}
-                />
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    className={`object-cover object-center transition-transform ease-out md:object-[70%_center] ${
+                      isCurrent ? 'scale-100' : 'scale-[1.10]'
+                    }`}
+                    style={{ transitionDuration: `${FADE_DUR}ms` }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         {/* Brasa cálida: da profundidad sin ensuciar la foto */}
         <div
@@ -158,7 +309,6 @@ export function Hero() {
         {/* Veladuras para legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/45 to-transparent" />
-        {/* Viñeta suave para asentar los bordes */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -182,9 +332,11 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-20 pt-24 md:px-8 md:pb-24 md:pt-28">
         <div className="max-w-3xl">
+          <LiveBaking />
+
           <p
             className="rise mb-5 flex items-center gap-3 text-[13px] font-bold uppercase tracking-[0.28em] text-accent"
-            style={{ '--rise-delay': '250ms' } as React.CSSProperties}
+            style={{ '--rise-delay': '320ms' } as React.CSSProperties}
           >
             <SprayStar className="size-4" />
             Empanadas argentinas · España
@@ -198,12 +350,12 @@ export function Hero() {
             </span>
             <span className="mask-line text-5xl md:text-7xl lg:text-8xl">
               <span style={{ '--mask-delay': '520ms' } as React.CSSProperties}>
-                carácter
+                carácter,
               </span>
             </span>
             <span className="mask-line text-5xl text-primary md:text-7xl lg:text-8xl">
               <span style={{ '--mask-delay': '660ms' } as React.CSSProperties}>
-                Buena de sabor.
+                buena de sabor.
               </span>
             </span>
           </h1>
@@ -221,9 +373,17 @@ export function Hero() {
             style={{ '--rise-delay': '990ms' } as React.CSSProperties}
           >
             <a
+              ref={ctaRef}
               href="#carta"
-              className="btn-shine group relative inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3.5 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              onMouseMove={handleCtaMove}
+              onMouseLeave={handleCtaLeave}
+              className="btn-shine group relative inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3.5 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-transform duration-300 will-change-transform hover:scale-[1.03] active:scale-[0.98]"
             >
+              <span
+                aria-hidden="true"
+                className="animate-ember pointer-events-none absolute inset-0 -z-10 rounded-full bg-primary blur-lg"
+                style={{ opacity: 0.35 }}
+              />
               <span>Ver la carta</span>
               <span
                 aria-hidden="true"
@@ -254,7 +414,12 @@ export function Hero() {
             <button
               key={img.src}
               type="button"
-              onClick={() => setCurrentImage(i)}
+              onClick={() => {
+                setPrevImage(currentImage)
+                setTransitioning(true)
+                setCurrentImage(i)
+                setTimeout(() => setTransitioning(false), BLUR_DUR)
+              }}
               className="group relative grid size-6 place-items-center"
               aria-label={`Ver imagen ${i + 1}`}
               aria-current={active}
@@ -293,7 +458,7 @@ export function Hero() {
         })}
       </div>
 
-      {/* Indicador de scroll */}
+      {/* Indicador de scroll — con trail sutil */}
       <div
         className={`pointer-events-none absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 transition-opacity delay-[1200ms] duration-1000 md:flex ${
           loaded ? 'opacity-60' : 'opacity-0'
@@ -301,7 +466,8 @@ export function Hero() {
         aria-hidden="true"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Baja</span>
-        <span className="relative h-8 w-px overflow-hidden bg-foreground/25">
+        <span className="relative h-9 w-px overflow-hidden bg-foreground/20">
+          <span className="animate-scroll-dot-trail absolute left-0 top-0 h-1.5 w-px bg-foreground/40" />
           <span className="animate-scroll-dot absolute left-0 top-0 h-2.5 w-px bg-foreground" />
         </span>
       </div>

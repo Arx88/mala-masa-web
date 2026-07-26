@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Archivo } from 'next/font/google'
+import { CursorDot } from '@/components/cursor-dot'
 import './globals.css'
 
 const archivo = Archivo({
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="es" className={`bg-background ${archivo.variable}`}>
       <body className="antialiased font-sans grain">
         {children}
+        <CursorDot />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

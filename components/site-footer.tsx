@@ -1,7 +1,43 @@
+'use client'
+
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 import { SprayStar } from '@/components/brand-marks'
 
 export function SiteFooter() {
+  const ctaRef = useRef<HTMLDivElement>(null)
+
+  // Parallax sutil del texto CTA al hacer scroll — el titular sube más lento que el botón
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const el = ctaRef.current
+    if (!el) return
+
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight
+      // Progreso de visibilidad del CTA en viewport: 0 abajo, 1 arriba
+      const progress = Math.max(0, Math.min(1, 1 - rect.top / vh))
+      const title = el.querySelector('[data-parallax-title]') as HTMLElement | null
+      const btn = el.querySelector('[data-parallax-btn]') as HTMLElement | null
+      if (title) title.style.transform = `translateY(${(progress - 0.5) * 24}px)`
+      if (btn) btn.style.transform = `translateY(${(progress - 0.5) * -12}px)`
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
   return (
     <footer className="relative overflow-hidden bg-background">
       {/* CTA final con bodegón */}
@@ -15,13 +51,20 @@ export function SiteFooter() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/60" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-5 text-center">
-            <h2 className="max-w-3xl text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
+          <div
+            ref={ctaRef}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-5 text-center"
+          >
+            <h2
+              data-parallax-title
+              className="parallax-y max-w-3xl text-balance text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl"
+            >
               El antojo no se negocia.
             </h2>
             <a
+              data-parallax-btn
               href="#carta"
-              className="btn-shine group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
+              className="parallax-y btn-shine group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-black uppercase tracking-[0.14em] text-primary-foreground transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
             >
               Pedir ahora
               <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
@@ -73,7 +116,7 @@ export function SiteFooter() {
             </p>
             <div className="flex gap-6">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/malamasa.es"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"

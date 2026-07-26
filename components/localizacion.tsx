@@ -61,7 +61,7 @@ export function Localizacion() {
           <Reveal delay={200}>
             <address className="mt-8 not-italic">
               <p className="text-xl font-black uppercase tracking-tight">Calle del Horno, 13</p>
-              <p className="text-muted-foreground">Barrio Ruzzafa · Valencia</p>
+              <p className="text-muted-foreground">Barrio Ruzafa · Valencia</p>
             </address>
           </Reveal>
 
@@ -72,7 +72,7 @@ export function Localizacion() {
           <Reveal delay={360}>
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <a
-                href="https://maps.google.com/?q=Calle+del+Horno+13+Madrid"
+                href="https://maps.google.com/?q=Calle+del+Horno+13+Valencia"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-shine group inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-3.5 text-sm font-black uppercase tracking-[0.14em] text-background transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-[1.03] active:scale-[0.98]"
@@ -83,7 +83,7 @@ export function Localizacion() {
                 </span>
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/malamasa.es"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-brush text-sm font-bold uppercase tracking-[0.14em] text-foreground/85 transition-colors hover:text-foreground"

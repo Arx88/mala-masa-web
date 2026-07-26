@@ -9,6 +9,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-mostaza: var(--mostaza);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -50,7 +51,7 @@
   --accent: oklch(0.75 0.15 75);
   --accent-foreground: oklch(0.13 0.005 60);
   --mostaza: oklch(0.75 0.15 75);
-  --destructive: oklch(0.58 0.21 29);
+  --destructive: oklch(0.55 0.22 25);
   --border: oklch(0.94 0.02 85 / 12%);
   --input: oklch(0.94 0.02 85 / 15%);
   --ring: oklch(0.58 0.21 29);
@@ -393,6 +394,240 @@
   transform: scaleX(1);
 }
 
+/* ---------- FASE 2 + 3 · Microdetalles ---------- */
+
+/* Steam con drift horizontal — el vapor se mueve en diagonal, no solo sube */
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 14px) scale(0.9);
+  }
+  18% { opacity: var(--steam-max, 0.45); }
+  70% { opacity: 0.14; }
+  100% {
+    opacity: 0;
+    transform: translate(var(--steam-drift, 0px), -130px) scale(1.8);
+  }
+}
+
+.animate-steam {
+  animation: steam-rise var(--steam-dur, 8s) ease-out infinite;
+  animation-delay: var(--steam-delay, 0s);
+}
+
+/* Scroll-dot trail — un fantasma que sigue al punto principal */
+@keyframes scroll-dot-trail {
+  0%   { transform: translateY(0); opacity: 0; }
+  20%  { opacity: 0.5; }
+  100% { transform: translateY(26px); opacity: 0; }
+}
+
+.animate-scroll-dot-trail {
+  animation: scroll-dot-trail 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: 0.18s;
+}
+
+/* ---------- FASE 3 · Cursor personalizado (desktop, muy sutil) ---------- */
+/* Un dot diminuto que sigue al cursor. Solo en dispositivos con ratón preciso.
+   Se agranda al hover de elementos interactivos. No reemplaza el cursor nativo:
+   lo complementa para dar "presencia" sin ser intrusivo. */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: oklch(0.75 0.15 75);
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                width 0.18s ease,
+                height 0.18s ease,
+                opacity 0.18s ease;
+    will-change: transform, width, height;
+    mix-blend-mode: difference;
+  }
+
+  .cursor-dot.is-hover {
+    width: 36px;
+    height: 36px;
+    background: oklch(0.94 0.02 85);
+  }
+
+  .cursor-dot.is-hidden {
+    opacity: 0;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot { display: none; }
+}
+
+/* ---------- FASE 4 · Subrayado hand-drawn para acentos ---------- */
+.underline-hand {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-hand::after {
+  content: '';
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.18em;
+  height: 0.38em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C 18 4, 32 10, 48 6 S 78 9, 98 5' fill='none' stroke='%23C2410C' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0;
+  transform: scaleX(0.6) translateY(2px);
+  transform-origin: left center;
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-in .underline-hand::after,
+.underline-hand.is-in::after {
+  opacity: 0.9;
+  transform: scaleX(1) translateY(0);
+}
+
+/* ---------- FASE 4 · Pulse sutil para el 48h ---------- */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 4s ease-in-out infinite;
+}
+
+/* ---------- FASE 4 · Número de carta con transición a flecha ---------- */
+.card-num {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .card-num {
+  transform: translateY(-2px);
+}
+
+/* ---------- FASE 4 · Footer CTA parallax sutil al scroll ---------- */
+.parallax-y {
+  will-change: transform;
+}
+
+/* ---------- Backdrop tipográfico gigante en el hero ---------- */
+/* Texto "MALA / MASA" repetido en vertical a los lados del hero,
+   con parallax propio (capa 2). Semi-transparente para no tapar la foto. */
+.hero-backdrop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  font-size: clamp(8rem, 18vw, 22rem);
+  line-height: 0.78;
+  color: oklch(0.94 0.02 85 / 5%);
+  user-select: none;
+  pointer-events: none;
+  transform: translate3d(calc(var(--bx, 0) * 1px), calc(var(--by, 0) * 1px), 0);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.hero-backdrop__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  white-space: nowrap;
+}
+
+.hero-backdrop__col--left {
+  align-items: flex-start;
+  padding-left: 1rem;
+  /* Inclinación sutil: el bloque se sale del viewport por la izquierda */
+  transform: translateY(-12vh) rotate(-2deg);
+}
+
+.hero-backdrop__col--right {
+  align-items: flex-end;
+  padding-right: 1rem;
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: oklch(0.75 0.15 75 / 8%);
+  transform: translateY(60vh) rotate(2deg);
+}
+
+.hero-backdrop__col--right span {
+  display: block;
+}
+
+@media (max-width: 49.99rem) {
+  .hero-backdrop { display: none; }
+}
+
+/* ---------- Backdrop tipográfico del manifiesto ---------- */
+/* Palabras gigantes verticales detrás del contenido, con parallax al scroll. */
+.manifiesto-backdrop {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  font-size: clamp(7rem, 16vw, 18rem);
+  line-height: 0.82;
+  color: oklch(0.94 0.02 85 / 4%);
+  text-align: center;
+  z-index: 0;
+}
+
+.manifiesto-backdrop span {
+  display: block;
+}
+
+.manifiesto-backdrop span:nth-child(even) {
+  color: oklch(0.75 0.15 75 / 5%);
+  font-style: italic;
+  font-weight: 700;
+  transform: translateX(2vw);
+}
+
+/* Cada línea del manifiesto — sin número grande flotante, solo el número
+   pequeño inline que cambia de color al hover. */
+.manifiesto-line {
+  overflow: visible;
+}
+
+/* ---------- Carta: card con imagen que zoom con mask al hover ---------- */
+/* Capa de gradient que se revela al hover para dar "calor" a la card */
+.carta-card__glow {
+  background: radial-gradient(
+    circle at 50% 100%,
+    oklch(0.58 0.21 29 / 22%),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .carta-card__glow {
+  opacity: 1;
+}
+
+/* ---------- Proceso: indicador por paso (no progress bar global) ---------- */
+.proceso-step {
+  position: relative;
+}
+
+/* ---------- Mantener el reduce-motion global actualizado ---------- */
 @media (prefers-reduced-motion: reduce) {
   .mask-line > span,
   .rise {
@@ -403,16 +638,21 @@
   .hero-parallax {
     transform: none;
   }
-  .underline-draw::after {
+  .underline-draw::after,
+  .underline-hand::after {
     transform: scaleX(1);
     transition: none;
+    opacity: 0.9;
   }
   .animate-steam,
   .animate-dash-ring,
-  .animate-ember {
+  .animate-ember,
+  .animate-scroll-dot-trail,
+  .animate-pulse-soft {
     animation: none;
   }
   .btn-shine::before {
     display: none;
   }
+  .cursor-dot { display: none; }
 }

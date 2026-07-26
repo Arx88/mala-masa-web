@@ -21,6 +21,11 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
   return (
     <Reveal as="li" delay={(index % 3) * 120} className="group">
       <article className="relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-all duration-500 hover:-translate-y-1.5 hover:border-foreground/30 hover:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
+        {/* Glow cálido que se revela desde la base al hacer hover */}
+        <span
+          aria-hidden="true"
+          className="carta-card__glow pointer-events-none absolute inset-0 z-0"
+        />
         {/* Filo cálido que se enciende en el borde superior al pasar el ratón */}
         <span
           aria-hidden="true"
@@ -44,7 +49,7 @@ function EmpanadaCard({ product, index }: { product: Product; index: number }) {
           {/* Número de sabor */}
           <span
             aria-hidden="true"
-            className="absolute bottom-3 right-4 text-4xl font-black text-foreground/25 tabular-nums transition-colors duration-500 group-hover:text-primary/60"
+            className="card-num absolute bottom-3 right-4 text-4xl font-black text-foreground/25 tabular-nums transition-colors duration-500 group-hover:text-primary/60"
           >
             {String(index + 1).padStart(2, '0')}
           </span>

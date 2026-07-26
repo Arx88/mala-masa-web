@@ -89,12 +89,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         playReminderSound()
       }
 
-      if (toast.duration && toast.duration > 0) {
-        setTimeout(() => dismiss(id), toast.duration)
-      }
+      // Nota: el auto-dismiss lo maneja ToastViewport vía onDismiss,
+      // que dispara handleDismiss (animación de salida) antes de remover el toast.
+      // NO hacemos dismiss directo acá porque saltaría la animación de salida.
       return id
     },
-    [dismiss, playReminderSound],
+    [playReminderSound],
   )
 
   return (
@@ -135,21 +135,28 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
   const [entering, setEntering] = useState(true)
   const [leaving, setLeaving] = useState(false)
 
+  // Entrada: doble rAF para asegurar render del estado inicial antes de animar
   useEffect(() => {
-    // Doble requestAnimationFrame para asegurar que el browser aplique el estado
-    // inicial antes de la transición (sino la animación no se ve)
     const r1 = requestAnimationFrame(() => {
       const r2 = requestAnimationFrame(() => setEntering(false))
-      // Cleanup del segundo rAF
       return () => cancelAnimationFrame(r2)
     })
     return () => cancelAnimationFrame(r1)
   }, [])
 
+  // Auto-dismiss: cuando pasa (duration)ms, dispara handleDismiss
+  // (que setea leaving=true y remueve después de la animación de salida).
+  // Antes esto vivía en ToastProvider.push() y saltaba la animación.
+  useEffect(() => {
+    if (!toast.duration || toast.duration <= 0) return
+    const timer = setTimeout(() => handleDismiss(), toast.duration)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toast.duration])
+
   const handleDismiss = () => {
     setLeaving(true)
-    // ui-ux-pro-max: exit-faster-than-enter — salida ~60-70% de la entrada
-    // Entrada 420ms → salida 280ms (se siente responsive, no se arrastra)
+    // ui-ux-pro-max: exit-faster-than-enter — salida 280ms vs entrada 420ms
     setTimeout(onDismiss, 280)
   }
 

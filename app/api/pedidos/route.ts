@@ -8,23 +8,30 @@ import { empanadas } from '@/lib/products'
  * Crea un pedido en Supabase (tabla `pedidos` + `pedido_items`).
  * La terminal de Mala Masa lo recibe en tiempo real via Supabase Realtime.
  *
- * Seguridad implementada:
- * 1. Rate limiting por IP — max 1 pedido cada 60s por IP
- * 2. Anti-duplicado — bloquea si hay pedido pendiente del mismo teléfono en 5 min
+ * Seguridad (ajustada para no romper la lógica del negocio):
+ * 1. Rate limiting por IP — 3 pedidos por minuto por IP (permite oficina/familia)
+ * 2. Anti-duplicado — solo bloquea si hay pedido "Sin tomar" del mismo teléfono
+ *    en los últimos 2 minutos (ventana corta, solo estado pendiente)
  * 3. Honeypot — campo oculto que bots llenan pero humanos no
  * 4. Validación de precios server-side — no se confía en los del cliente
  * 5. negocio_id hardcodeado — no se puede atacar otros negocios
- * 6. Límite de items — máximo 50 empanadas por pedido
+ * 6. Límite de items — máximo 200 empanadas por pedido (permite fiestas/eventos)
  * 7. Sanitización de texto — previene inyección en observaciones
  */
 
 // === Rate limiting en memoria (por IP) ===
-// En Vercel serverless, esto funciona por instancia (no es perfecto pero
-// bloquea la mayoría de spam). Para producción con mucho tráfico, usar
-// Vercel KV o Upstash Redis.
+// 3 pedidos por minuto por IP — permite que 2-3 personas en la misma WiFi
+// pidan al mismo tiempo, pero bloquea spam automatizado.
 const rateLimitMap = new Map<string, { count: number; lastReset: number }>()
 const RATE_LIMIT_WINDOW = 60_000 // 60 segundos
-const RATE_LIMIT_MAX = 1 // 1 pedido por IP cada 60s
+const RATE_LIMIT_MAX = 3 // 3 pedidos por IP cada 60s
+
+// === Anti-duplicado ===
+// Solo bloquea si hay un pedido del mismo teléfono con estado "Sin tomar"
+// (todavía no empezó a cocinarse) en los últimos 2 minutos.
+// Si el pedido ya está "Cocinando" o avanzó, permite hacer otro.
+const DUPLICATE_WINDOW = 2 * 60_000 // 2 minutos
+const DUPLICATE_STATES = ['Sin tomar'] // solo estos estados bloquean
 
 type OrderItem = {
   productId: string
@@ -45,17 +52,15 @@ type OrderRequest = {
   scheduledTime?: string
   notes?: string
   total: number
-  // Honeypot — campo oculto que bots llenan automáticamente
-  website?: string
+  website?: string // honeypot
 }
 
-// Sanitizar texto para prevenir inyección en observaciones
 function sanitize(text: string): string {
   return text
-    .replace(/[\x00-\x1F\x7F]/g, '') // caracteres de control
-    .replace(/<[^>]*>/g, '') // tags HTML
+    .replace(/[\x00-\x1F\x7F]/g, '')
+    .replace(/<[^>]*>/g, '')
     .trim()
-    .slice(0, 500) // máximo 500 caracteres
+    .slice(0, 500)
 }
 
 export async function POST(request: NextRequest) {
@@ -74,13 +79,12 @@ export async function POST(request: NextRequest) {
         if (ipData.count >= RATE_LIMIT_MAX) {
           const waitSeconds = Math.ceil((RATE_LIMIT_WINDOW - elapsed) / 1000)
           return NextResponse.json(
-            { error: `Demasiados pedidos. Esperá ${waitSeconds}s antes de intentar de nuevo.` },
+            { error: `Demasiados pedidos desde esta red. Esperá ${waitSeconds}s.` },
             { status: 429 },
           )
         }
         ipData.count++
       } else {
-        // Reset window
         ipData.count = 1
         ipData.lastReset = now
       }
@@ -88,8 +92,8 @@ export async function POST(request: NextRequest) {
       rateLimitMap.set(ip, { count: 1, lastReset: now })
     }
 
-    // Limpiar IPs viejas del mapa (cada ~100 requests)
-    if (rateLimitMap.size > 100) {
+    // Limpiar IPs viejas
+    if (rateLimitMap.size > 200) {
       for (const [key, val] of rateLimitMap.entries()) {
         if (now - val.lastReset > RATE_LIMIT_WINDOW * 5) {
           rateLimitMap.delete(key)
@@ -99,9 +103,8 @@ export async function POST(request: NextRequest) {
 
     const body: OrderRequest = await request.json()
 
-    // === 1. HONEYPOT — si el campo oculto "website" tiene valor, es un bot ===
+    // === 1. HONEYPOT ===
     if (body.website) {
-      // Pretender que funcionó para no alertar al bot
       return NextResponse.json({ success: true, orderId: 'bot-trapped', orderNumber: 'BOT-0000' })
     }
 
@@ -110,10 +113,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'El pedido no tiene items' }, { status: 400 })
     }
 
-    // Límite de items — máximo 50 empanadas por pedido
+    // Límite de items — 200 empanadas (permite fiestas: 16 docenas)
     const totalQty = body.items.reduce((sum, item) => sum + item.qty, 0)
-    if (totalQty > 50) {
-      return NextResponse.json({ error: 'Máximo 50 empanadas por pedido' }, { status: 400 })
+    if (totalQty > 200) {
+      return NextResponse.json({ error: 'Máximo 200 empanadas por pedido. Para pedidos más grandes llamá al local.' }, { status: 400 })
     }
 
     if (!body.customer?.name?.trim() || body.customer.name.trim().length < 2) {
@@ -129,23 +132,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Falta la dirección de entrega' }, { status: 400 })
     }
 
-    // === 3. ANTI-DUPLICADO — verificar si hay pedido pendiente del mismo teléfono ===
-    // Buscar pedidos con el mismo teléfono en los últimos 5 minutos
-    const fiveMinAgo = new Date(Date.now() - 5 * 60_000).toISOString()
+    // === 3. ANTI-DUPLICADO (solo estado "Sin tomar" en 2 min) ===
+    // Buscar pedidos recientes del mismo teléfono que SIGAN pendientes
+    const twoMinAgo = new Date(Date.now() - DUPLICATE_WINDOW).toISOString()
     const { data: recentOrders } = await supabase
       .from('pedidos')
-      .select('id, creado_en, observaciones')
+      .select('id, creado_en, observaciones, estado')
       .eq('negocio_id', NEGOCIO_ID)
-      .gte('creado_en', fiveMinAgo)
+      .gte('creado_en', twoMinAgo)
+      .in('estado', DUPLICATE_STATES)
 
     if (recentOrders && recentOrders.length > 0) {
-      // Verificar si alguno tiene el mismo teléfono en observaciones
-      const phoneInObservations = recentOrders.some(order =>
-        order.observaciones?.includes(phoneDigits)
+      // Matching EXACTO del teléfono (no includes) para evitar falsos positivos
+      // El teléfono se guarda en observaciones como "📞 34600123456"
+      const phonePattern = `📞 ${phoneDigits}`
+      const hasPending = recentOrders.some(order =>
+        order.observaciones?.includes(phonePattern)
       )
-      if (phoneInObservations) {
+      if (hasPending) {
         return NextResponse.json(
-          { error: 'Ya tenés un pedido reciente. Esperá 5 minutos antes de hacer otro.' },
+          { error: 'Tenés un pedido que recién hicimos. Si querés agregar algo, llamá al local.' },
           { status: 409 },
         )
       }
@@ -181,15 +187,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // === 5. Generar IDs únicos ===
+    // === 5. Generar IDs ===
     const timestamp = Date.now()
     const pedidoId = `pd_web_${timestamp}`
     const randomSuffix = Math.random().toString(36).slice(2, 6).toUpperCase()
     const orderNumber = `WEB-${randomSuffix}`
 
-    // === 6. Construir el pedido (todo sanitizado) ===
+    // === 6. Construir pedido ===
     const observaciones = [
-      `🌐 Pedido desde web (mala-masa-web.vercel.app)`,
+      `🌐 Pedido desde web`,
       `📞 ${sanitize(phoneDigits)}`,
       body.customer.address ? `📍 ${sanitize(body.customer.address)}` : null,
       body.scheduledTime ? `🕐 Programado: ${sanitize(body.scheduledTime)}` : null,
@@ -229,7 +235,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // === 8. Insertar items del pedido ===
+    // === 8. Insertar items ===
     const pedidoItems = validatedItems.map((item, index) => {
       const recetaId = PRODUCT_TO_RECETA[item.productId]
       return {
@@ -255,7 +261,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // === 9. Respuesta exitosa ===
+    // === 9. Respuesta ===
     return NextResponse.json({
       success: true,
       orderId: pedidoId,

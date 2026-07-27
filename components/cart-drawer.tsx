@@ -51,6 +51,7 @@ export function CartDrawer() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showErrors, setShowErrors] = useState(false)
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false)
+  const [honeypotValue, setHoneypotValue] = useState('')
 
   // Refs para auto-focus (UX rule: focus-management)
   const errorRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -214,6 +215,7 @@ export function CartDrawer() {
           scheduledTime: order.time === 'schedule' ? order.scheduledTime : undefined,
           notes: order.notes || undefined,
           total: grandTotal,
+          website: honeypotValue, // honeypot — si tiene valor, la API lo rechaza
         }),
       })
 
@@ -706,6 +708,20 @@ export function CartDrawer() {
                     className="w-full resize-none border-b border-border bg-transparent px-0 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-primary"
                   />
                 </Section>
+
+                {/* === Honeypot anti-bots ===
+                    Campo oculto visualmente. Los bots lo llenan automáticamente
+                    porque creen que es un campo real. La API lo rechaza silenciosamente. */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', top: 'auto', width: 1, height: 1, overflow: 'hidden' }}>
+                  <label>No llenar este campo</label>
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypotValue}
+                    onChange={(e) => setHoneypotValue(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           )}
